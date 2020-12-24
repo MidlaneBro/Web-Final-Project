@@ -12,7 +12,7 @@ function App() {
   const [msg, setmsg] = useState("");
 
   const onClickSingle = async () => {
-    await switchToSingle();
+    //await switchToSingle();
     setpage("Single");
     setmsg("");
   }
@@ -56,6 +56,7 @@ function App() {
   }
 
   if(page==="Single"){
+    console.log("singleplayer now!")
     return (
       <div className="App">
         <Single onClickReturn={onClickReturn}></Single>
