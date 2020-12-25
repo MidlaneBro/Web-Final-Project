@@ -13,13 +13,14 @@ class Single extends Component {
         xv:0,
         yv:0,
         trail:[],
-        tail:5
+        tail:5,
+        score:0
     }
     game = () => {
         const ctx = this.refs.canvas.getContext("2d");
         this.setState({px:this.state.px + this.state.xv,
                        py:this.state.py + this.state.yv});
-        if(this.state.px<0){
+        if(this.state.px<0){//loop around
             this.setState({px:this.state.tc-1});
         }
         if(this.state.px>this.state.tc-1){
@@ -36,8 +37,8 @@ class Single extends Component {
         ctx.fillStyle = "lime"
         for(var i=0;i<this.state.trail.length;i++){
             ctx.fillRect(this.state.trail[i].x*this.state.gs,this.state.trail[i].y*this.state.gs,this.state.gs-2,this.state.gs-2);
-            if(this.state.trail[i].x == this.state.px,this.state.trail[i].y == this.state.py){
-                //this.setState({tail:5});
+            if(this.state.trail[i].x == this.state.px && this.state.trail[i].y == this.state.py){//player hits himself
+                this.setState({tail:5, score:0, px:10, py:10, xv:0, yv:0});
             }
         }
         this.setState({ trail: [...this.state.trail, {x:this.state.px,y:this.state.py}] }) //simple value
@@ -49,7 +50,8 @@ class Single extends Component {
         if(this.state.ax==this.state.px && this.state.ay==this.state.py){
             this.setState({ax:Math.floor(Math.random()*this.state.tc),
                            ay:Math.floor(Math.random()*this.state.tc),
-                           tail:this.state.tail + 1});
+                           tail:this.state.tail + 1,
+                           score:this.state.score + 1});
         }
         ctx.fillStyle = "red";
         ctx.fillRect(this.state.ax*this.state.gs,this.state.ay*this.state.gs,this.state.gs-2,this.state.gs-2);
@@ -57,16 +59,20 @@ class Single extends Component {
     keyPush = (evt) =>{
         switch(evt.keyCode){
             case 37:
-                this.setState({xv:-1,yv:0})
+                if(this.state.xv != 1)
+                    this.setState({xv:-1,yv:0})
                 break;
             case 38:
-                this.setState({xv:0,yv:-1})
+                if(this.state.yv != 1)
+                    this.setState({xv:0,yv:-1})
                 break;
             case 39:
-                this.setState({xv:1,yv:0})
+                if(this.state.xv != -1)
+                    this.setState({xv:1,yv:0})
                 break;
             case 40:
-                this.setState({xv:0,yv:1})
+                if(this.state.yv != -1)
+                    this.setState({xv:0,yv:1})
                 break;
         }
     }
@@ -86,7 +92,7 @@ class Single extends Component {
                     <canvas ref="canvas" width = {400} height = {400}></canvas>
                 </div>
                 <div>
-                    <h1>point:</h1>
+                    <h1>point:{this.state.score}</h1>
                 </div>
             </div>
         );
