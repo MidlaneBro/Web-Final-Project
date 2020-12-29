@@ -35,5 +35,7 @@
 
 canvas {
     background-color: black;
-    width: 400px;
+    width: 1000px;
+    height: 500px;
+    border: 5px outset red;
 }

@@ -5,6 +5,7 @@ import Lobby from './container/Lobby';
 import Single from './container/Single';
 import Multiple from './container/Multiple';
 import Rule from './container/Rule';
+import LeaderBoard from './container/LeaderBoard';
 import Author from './container/Author';
 
 function App() {
@@ -12,9 +13,9 @@ function App() {
   const [msg, setmsg] = useState("");
 
   const onClickSingle = async () => {
-    //await switchToSingle();
+    let msg = await switchToSingle();
     setpage("Single");
-    setmsg("");
+    setmsg(msg);
   }
 
   const onClickMultiple = async () => {
@@ -42,9 +43,9 @@ function App() {
   }
 
   const onClickReturn = async () => {
-    await backToLobby();
+    let msg = await backToLobby();
     setpage("Lobby");
-    setmsg("");
+    setmsg(msg);
   }
 
   if(page==="Lobby"){
@@ -85,8 +86,7 @@ function App() {
   if(page==="Leaderboard"){
     return (
       <div className="App">
-        {msg}
-        <button onClick={onClickReturn}>return</button>
+        <LeaderBoard onClickReturn={onClickReturn}></LeaderBoard>
       </div>
     )
   }

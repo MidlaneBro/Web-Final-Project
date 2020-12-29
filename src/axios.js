@@ -4,7 +4,12 @@ const instance = axios.create({ baseURL: 'http://localhost:4000' });
 
 const switchToSingle = async () => {
     const {data} = await instance.get('/single_player');
-    console.log(data);
+    return data;
+}
+
+const sendsinglescore = async (name,score) => {
+    const {data} = await instance.post('/single_player',{name:name,score:score})
+    return data;
 }
 
 const switchToMultiple = async () => {
@@ -29,7 +34,7 @@ const switchToAuthor = async () => {
 
 const backToLobby = async () => {
     const {data} = await instance.get('/');
-    console.log(data);
+    return data;
 }
 
-export { switchToSingle, switchToMultiple, switchToRule, switchToLeaderboard, switchToAuthor, backToLobby };
+export { switchToSingle, sendsinglescore, switchToMultiple, switchToRule, switchToLeaderboard, switchToAuthor, backToLobby };
