@@ -68,8 +68,7 @@ function App() {
   if(page==="Multiple"){
     return (
       <div className="App">
-        {msg}
-        <button onClick={onClickReturn}>return</button>
+        <Multiple onClickReturn={onClickReturn}></Multiple>
       </div>
     )
   }

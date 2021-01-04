@@ -48,6 +48,7 @@ function game(){
         ax = Math.floor(Math.random()*tc);
         ay = Math.floor(Math.random()*tc);
     }
+    ctx.fillStyle = "red";
     ctx.fillRect(0,0,400,400);
 }
 function keyPush(evt){
