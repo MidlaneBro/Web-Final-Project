@@ -68,7 +68,6 @@ function App() {
   if(page==="Multiple"){
     return (
       <div className="App">
-        {msg}
         <button onClick={onClickReturn}>return</button>
       </div>
     )
@@ -86,8 +85,7 @@ function App() {
   if(page==="Leaderboard"){
     return (
       <div className="App">
-        {msg}
-        <button onClick={onClickReturn}>return</button>
+        <LeaderBoard onClick={onClickReturn}></LeaderBoard>
       </div>
     )
   }
