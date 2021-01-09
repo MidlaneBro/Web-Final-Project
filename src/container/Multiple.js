@@ -1,7 +1,7 @@
 import "./Multiple.css"
 import React, { useState, useEffect, Component } from 'react';
-import io from 'socket.io-client'
-let socket = io('http://localhost:4000')
+
+let ws = new WebSocket('ws://localhost:4000')
 class Multiple extends Component {
     constructor(props){
         super(props)
@@ -41,6 +41,7 @@ class Multiple extends Component {
         });
         if(this.state.px<0){//hit left wall
             //this.endgame();
+            this.setState({px:this.state.tcx-1})
         }
         if(this.state.px>this.state.tcx-1){//hit right wall
             //this.endgame();
@@ -49,6 +50,19 @@ class Multiple extends Component {
             //this.endgame();
         }
         if(this.state.py>this.state.tcy-1){//hit bottom wall
+            //this.endgame();
+        }
+        if(this.state.r_px<0){//hit left wall
+            //this.endgame();
+            this.setState({r_px:this.state.tcx-1})
+        }
+        if(this.state.r_px>this.state.tcx-1){//hit right wall
+            //this.endgame();
+        }
+        if(this.state.r_py<0){//hit upper wall
+            //this.endgame();
+        }
+        if(this.state.r_py>this.state.tcy-1){//hit bottom wall
             //this.endgame();
         }
         ctx.fillStyle = "black"
@@ -61,7 +75,7 @@ class Multiple extends Component {
                     this.setState({tail:5, score:0, px:25, py:12, xv:0, yv:0});
                 }
                 else{
-                    this.endgame();
+                    //this.endgame();
                 }
             }
         }
@@ -80,6 +94,7 @@ class Multiple extends Component {
             });
         }
         //player2
+        ctx.fillStyle = "orange"
         for(let i=0;i<this.state.r_trail.length;i++){//plot the snake according to trail
             ctx.fillRect(this.state.r_trail[i].x*this.state.gs,this.state.r_trail[i].y*this.state.gs,this.state.gs-2,this.state.gs-2);
             if(this.state.r_trail[i].x === this.state.r_px && this.state.r_trail[i].y === this.state.r_py){//player hits himself
@@ -87,7 +102,7 @@ class Multiple extends Component {
                     this.setState({r_tail:5, r_score:0, r_px:25, r_py:12, r_xv:0, r_yv:0});
                 }
                 else{
-                    this.endgame();
+                    //this.endgame();
                 }
             }
         }
@@ -120,7 +135,8 @@ class Multiple extends Component {
     }
 
     keyPush = (evt) =>{
-    	socket.emit('move',evt);
+    	//socket.emit('move',evt);
+        ws.send(evt.keyCode);
         switch(evt.keyCode){
             case 37: //left arrow
                 if(this.state.xv !== 1)
@@ -143,38 +159,53 @@ class Multiple extends Component {
         }
     }
 
-    rivalMove = key => {
-    	switch(key.keyCode){
-            case 37: //left arrow
-                if(this.state.r_xv !== 1)
-                    this.setState({r_xv:-1,r_yv:0})
-                break;
-            case 38: //up arrow
-                if(this.state.r_yv !== 1)
-                    this.setState({r_xv:0,r_yv:-1})
-                break;
-            case 39: //right arrow
-                if(this.state.r_xv !== -1)
-                    this.setState({r_xv:1,r_yv:0})
-                break;
-            case 40: //down arrow
-                if(this.state.r_yv !== -1)
-                    this.setState({r_xv:0,r_yv:1})
-                break;
-            default:
-                break;
-        }
-    };
-
     componentDidMount() {
         this.id = setInterval(()=>this.game(),1000/10);
+
         document.addEventListener("keydown",e=>this.keyPush(e));
-        socket.on('move', this.rivalMove)
+
+
+
+        //開啟後執行的動作，指定一個 function 會在連結 WebSocket 後執行
+        ws.onopen = () => {
+            console.log('open connection')
+        }
+
+        //關閉後執行的動作，指定一個 function 會在連結中斷後執行
+        ws.onclose = () => {
+            console.log('close connection')
+        }
+
+        ws.onmessage = event => {
+            var key = event.data
+            switch(parseInt(key)){
+                    case 37: //left arrow
+                        if(this.state.r_xv !== 1)
+                            this.setState({r_xv:-1,r_yv:0})
+                        break;
+                    case 38: //up arrow
+                        if(this.state.r_yv !== 1)
+                            this.setState({r_xv:0,r_yv:-1})
+                        break;
+                    case 39: //right arrow
+                        if(this.state.r_xv !== -1)
+                            this.setState({r_xv:1,r_yv:0})
+                        break;
+                    case 40: //down arrow
+                        if(this.state.r_yv !== -1)
+                            this.setState({r_xv:0,r_yv:1})
+                        break;
+                    default:
+                        console.log(key)
+                        break;
+                }
+        }
+
     }
 
     componentWillUnmount() {
         clearInterval(this.id);
-        socket.off("move");
+        //socket.off("move");
     }
 
     render() {
