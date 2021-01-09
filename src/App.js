@@ -32,8 +32,8 @@ function App() {
 
   const onClickLeaderboard = async () => {
     let msg = await switchToLeaderboard();
-    setpage("Leaderboard");
     setmsg(msg);
+    setpage("Leaderboard");
   }
 
   const onClickAuthor = async () => {
@@ -86,7 +86,8 @@ function App() {
   if(page==="Leaderboard"){
     return (
       <div className="App">
-        <LeaderBoard onClickReturn={onClickReturn}></LeaderBoard>
+        {msg}
+        <button onClick={onClickReturn}>return</button>
       </div>
     )
   }
