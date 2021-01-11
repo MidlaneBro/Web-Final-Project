@@ -1,26 +1,30 @@
 import { Table } from 'antd'
 
 function LeaderBoard(props){
-    const columns = [
-        {
-            title:'Name',
-            dataIndex:'name',
-            key:'name',
-        },
-        {
-            title:'Score',
-            dataIndex:'score',
-            key:'score',
-        }
-    ]
     return(
         <div>
             <div className="head">
-                <button className="button3" onClick={props.onClick}>Return</button>
+                <button className="button3" onClick={props.onClickReturn}>Return</button>
             </div>
             <div className="leaderboard">
                 <h1>LeaderBoard</h1>
-                <Table dataSource={props.data} columns={columns}></Table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {props.data.map(e=>
+                            <tr>
+                                <td>{e.name}</td>
+                                <td>{e.score}</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+                <h2>Top 10</h2>
             </div>
         </div>
     );

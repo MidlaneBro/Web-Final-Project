@@ -1,6 +1,10 @@
-function Author(){
+function Author(props){
     return(
-        <div></div>
+        <div>
+            <div className="head">
+                <button className="button3" onClick={props.onClickReturn}>Return</button>
+            </div>
+        </div>
     )
 }
 

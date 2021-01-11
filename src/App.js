@@ -76,8 +76,7 @@ function App() {
   if(page==="Rule"){
     return (
       <div className="App">
-        {msg}
-        <button onClick={onClickReturn}>return</button>
+        <Rule onClickReturn={onClickReturn}></Rule>
       </div>
     )
   }
@@ -85,7 +84,7 @@ function App() {
   if(page==="Leaderboard"){
     return (
       <div className="App">
-        <LeaderBoard onClick={onClickReturn} data={msg}></LeaderBoard>
+        <LeaderBoard onClickReturn={onClickReturn} data={msg}></LeaderBoard>
       </div>
     )
   }
@@ -93,8 +92,7 @@ function App() {
   if(page==="Author"){
     return (
       <div className="App">
-        {msg}
-        <button onClick={onClickReturn}>return</button>
+        <Author onClickReturn={onClickReturn} data={msg}></Author>
       </div>
     )
   }
