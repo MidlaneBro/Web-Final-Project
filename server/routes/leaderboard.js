@@ -1,5 +1,5 @@
-import express from 'express';
-import LeaderBoard from '../models/leaderboard.js';
+const express = require('express');
+const LeaderBoard = require('../models/leaderboard.js');
 
 const router = express.Router();
 
@@ -10,4 +10,4 @@ router.get('/', (req, res) => {
     });
 });
 
-export default router;
+module.exports = router;

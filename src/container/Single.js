@@ -1,4 +1,3 @@
-import "./Single.css"
 import React, { Component } from 'react';
 import {sendsinglescore} from '../axios';
 

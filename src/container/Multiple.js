@@ -1,5 +1,4 @@
-import "./Multiple.css"
-import React, { useState, useEffect, Component } from 'react';
+import React, { Component } from 'react';
 
 let ws = new WebSocket('ws://localhost:4000')
 class Multiple extends Component {
@@ -81,7 +80,7 @@ class Multiple extends Component {
         }
         this.setState({ trail: [...this.state.trail, {x:this.state.px,y:this.state.py}] }) //simple value
         while(this.state.trail.length>this.state.tail){//shorten the snake(end the game)
-            var array = [...this.state.trail]; // make a separate copy of the array
+            let array = [...this.state.trail]; // make a separate copy of the array
             array.splice(0,1);
             this.setState({trail: array});
         }
@@ -108,7 +107,7 @@ class Multiple extends Component {
         }
         this.setState({ r_trail: [...this.state.r_trail, {x:this.state.r_px,y:this.state.r_py}] }) //simple value
         while(this.state.r_trail.length>this.state.r_tail){//shorten the snake(end the game)
-            var array = [...this.state.r_trail]; // make a separate copy of the array
+            let array = [...this.state.r_trail]; // make a separate copy of the array
             array.splice(0,1);
             this.setState({r_trail: array});
         }

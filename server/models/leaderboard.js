@@ -1,5 +1,4 @@
-import mongoose from 'mongoose'
-
+const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const LeaderBoardSchema = new Schema({
@@ -15,4 +14,4 @@ const LeaderBoardSchema = new Schema({
 
 const LeaderBoard = mongoose.model('LeaderBoard', LeaderBoardSchema);
 
-export default LeaderBoard;
+module.exports = LeaderBoard;

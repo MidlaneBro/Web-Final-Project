@@ -1,4 +1,5 @@
 import './App.css';
+import 'antd/dist/antd.css';
 import {switchToSingle, switchToMultiple, switchToRule, switchToLeaderboard, switchToAuthor, backToLobby} from './axios';
 import {useState} from 'react';
 import Lobby from './container/Lobby';
@@ -57,7 +58,6 @@ function App() {
   }
 
   if(page==="Single"){
-    console.log("singleplayer now!")
     return (
       <div className="App">
         <Single onClickReturn={onClickReturn}></Single>
@@ -85,7 +85,7 @@ function App() {
   if(page==="Leaderboard"){
     return (
       <div className="App">
-        <LeaderBoard onClick={onClickReturn}></LeaderBoard>
+        <LeaderBoard onClick={onClickReturn} data={msg}></LeaderBoard>
       </div>
     )
   }

@@ -1,4 +1,3 @@
-import "./Lobby.css";
 import logo from "../img/logo.jpg";
 
 function Lobby(props){
