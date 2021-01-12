@@ -1,5 +1,3 @@
-import { Table } from 'antd'
-
 function LeaderBoard(props){
     return(
         <div>

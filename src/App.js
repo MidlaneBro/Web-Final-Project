@@ -1,7 +1,7 @@
 import './App.css';
 import 'antd/dist/antd.css';
-import {switchToSingle, switchToMultiple, switchToRule, switchToLeaderboard, switchToAuthor, backToLobby} from './axios';
-import {useState} from 'react';
+import {switchToSingle, switchToRule, switchToLeaderboard, switchToAuthor, backToLobby} from './axios';
+import {useEffect, useState} from 'react';
 import Lobby from './container/Lobby';
 import Single from './container/Single';
 import Multiple from './container/Multiple';
@@ -9,9 +9,13 @@ import Rule from './container/Rule';
 import LeaderBoard from './container/LeaderBoard';
 import Author from './container/Author';
 
+let client = new WebSocket('ws://localhost:4000');
+
 function App() {
   const [page, setpage] = useState("Lobby");
   const [msg, setmsg] = useState("");
+  const [uuid, setuuid] = useState("");
+  const [status, setstatus] = useState("");
 
   const onClickSingle = async () => {
     let msg = await switchToSingle();
@@ -19,10 +23,14 @@ function App() {
     setmsg(msg);
   }
 
-  const onClickMultiple = async () => {
-    let msg = await switchToMultiple();
+  const onClickMultiple = () => {
+    client.send(JSON.stringify(['','join']));
     setpage("Multiple");
-    setmsg(msg);
+  }
+
+  const returnFromMultiple = () => {
+    client.send(JSON.stringify([uuid,'leave']));
+    setpage('Lobby');
   }
 
   const onClickRule = async () => {
@@ -49,6 +57,16 @@ function App() {
     setmsg(msg);
   }
 
+  useEffect(()=>{
+    client.onmessage = event => {
+      console.log(JSON.parse(event.data));
+      if(uuid==="" && (JSON.parse(event.data)[1]==='start'||JSON.parse(event.data)[1]==='wait')){
+        setuuid(JSON.parse(event.data)[0]);
+        setstatus(JSON.parse(event.data)[1]);
+      }
+    }
+  })
+
   if(page==="Lobby"){
     return (
       <div className="App">
@@ -68,7 +86,7 @@ function App() {
   if(page==="Multiple"){
     return (
       <div className="App">
-        <Multiple onClickReturn={onClickReturn}></Multiple>
+        <Multiple onClickReturn={returnFromMultiple}></Multiple>
       </div>
     )
   }

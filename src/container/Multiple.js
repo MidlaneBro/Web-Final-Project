@@ -176,7 +176,8 @@ class Multiple extends Component {
         }
 
         ws.onmessage = event => {
-            var key = event.data
+            console.log(event);
+            /*var key = event.data
             switch(parseInt(key)){
                     case 37: //left arrow
                         if(this.state.r_xv !== 1)
@@ -197,7 +198,7 @@ class Multiple extends Component {
                     default:
                         console.log(key)
                         break;
-                }
+                }*/
         }
 
     }

@@ -43,25 +43,92 @@ db.on('error', (error) => {
     console.error(error)
 })
 
+const rooms = {}
+/*rooms = {
+    room1 : {
+        uuid1: ws1
+        uuid2: ws2
+    }
+}*/
+
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
 db.once('open', () => {
     console.log('MongoDB connected!')
 
-    wss.on('connection', ws => {
-        console.log('Client connected!')
 
+    wss.on('connection', ws => {
+        const uuid = uuidv4();
+        const leave = uuid => {
+            for(room in rooms){
+                let flag = false;
+                for(user in rooms[room]){
+                    if(uuid===user){
+                        delete rooms[room][user];
+                        flag = true;
+                        break;
+                    }
+                }
+                if(flag){
+                    if(Object.keys(rooms[room]).length===0){
+                        delete rooms[room];
+                    }
+                    else if(Object.keys(rooms[room]).length===1){
+                        for(const [key,value] of Object.entries(rooms[room])){
+                            value.send(JSON.stringify([uuid,'leave']));
+                        }
+                    }
+                    break;
+                }
+            }
+        }
         ws.on('message', data => {
-            console.log(data)
-            //取得所有連接中的 client
-            /*let clients = wss.clients
-            
-            //做迴圈，發送訊息至每個 client
-            clients.forEach(client => {
-                client.send(data)
-            })*/
+            console.log(JSON.parse(data));
+            if(JSON.parse(data)[1]==='join'){
+                console.log(`Add client with uuid:${uuid}`);
+                if(rooms==={}){
+                    const room = uuidv4();
+                    rooms[room] = {};
+                    rooms[room][uuid] = ws;
+                    console.log(`Create new room with id:${room}`);
+                    ws.send(JSON.stringify([uuid,'wait']));
+                }
+                else{
+                    flag = false;
+                    for(room in rooms){
+                        if(Object.keys(rooms[room]).length===1){
+                            rooms[room][uuid] = ws;
+                            for(const [key,value] of Object.entries(rooms[room])){
+                                value.send(JSON.stringify([uuid,'start']));
+                            }
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if(!flag){
+                        const room = uuidv4();
+                        rooms[room] = {};
+                        rooms[room][uuid] = ws;
+                        console.log(`Create new room with id:${room}`);
+                        ws.send(JSON.stringify([uuid,'wait']));
+                    }
+                }
+            }
+            if(JSON.parse(data)[1]==="leave"){
+                console.log(`Remove client with uuid:${uuid}`);
+                leave(uuid);
+            }
+            console.log(rooms);
         })
     
         ws.on('close', () => {
-            console.log('Websocket closed!')
+            leave(uuid);
+            console.log(rooms);
         })
     })
 
