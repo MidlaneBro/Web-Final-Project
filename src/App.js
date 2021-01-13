@@ -14,8 +14,11 @@ let client = new WebSocket('ws://localhost:4000');
 function App() {
   const [page, setpage] = useState("Lobby");
   const [msg, setmsg] = useState("");
+  //for multiple game
   const [uuid, setuuid] = useState("");
   const [status, setstatus] = useState("");
+  const [game, setgame] = useState(null);
+  //---------------------------------------
 
   const onClickSingle = async () => {
     let msg = await switchToSingle();
@@ -30,6 +33,9 @@ function App() {
 
   const returnFromMultiple = () => {
     client.send(JSON.stringify([uuid,'leave']));
+    setuuid("");
+    setstatus("");
+    setgame(null);
     setpage('Lobby');
   }
 
@@ -57,12 +63,19 @@ function App() {
     setmsg(msg);
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     client.onmessage = event => {
-      console.log(JSON.parse(event.data));
-      if(uuid==="" && (JSON.parse(event.data)[1]==='start'||JSON.parse(event.data)[1]==='wait')){
+      if(uuid===""){
         setuuid(JSON.parse(event.data)[0]);
+      }
+      if(JSON.parse(event.data)[1]==='start'||JSON.parse(event.data)[1]==='wait'){
         setstatus(JSON.parse(event.data)[1]);
+      }
+      if(JSON.parse(event.data)[0]!==uuid&&JSON.parse(event.data)[1]==='leave'){
+        setstatus('wait');
+      }
+      if(JSON.parse(event.data)[0]===""){
+        setgame(JSON.parse(event.data)[1]);
       }
     }
   })
@@ -86,7 +99,7 @@ function App() {
   if(page==="Multiple"){
     return (
       <div className="App">
-        <Multiple onClickReturn={returnFromMultiple}></Multiple>
+        <Multiple client={client} uuid={uuid} status={status} game={game} onClickReturn={returnFromMultiple}></Multiple>
       </div>
     )
   }
