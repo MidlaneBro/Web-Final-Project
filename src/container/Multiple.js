@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import loading from "../img/loading.gif";
 
 class Multiple extends Component {
     constructor(props){
@@ -42,12 +43,14 @@ class Multiple extends Component {
                     <button className="button3" onClick={this.props.onClickReturn}>Return</button>
                 </div>
                 <div>
-                    {this.props.status==="start"? <canvas ref="canvas" width={1000} height={500}></canvas>:<h1>Loading</h1>}
+                    {this.props.status==="start"? <canvas ref="canvas" width={1000} height={500}></canvas>:<img src={loading} alt="loading"/>}
                 </div>
                 <div>
-                    <h1>Score:{this.state.score}</h1>
+                    {this.props.status==="start"? <h1>Score:{this.state.score}</h1>:<h1>Waiting for another player...</h1>}
                 </div>
             </div>
         );
     }
-}export default Multiple;
+}
+
+export default Multiple;
