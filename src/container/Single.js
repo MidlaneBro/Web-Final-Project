@@ -39,11 +39,7 @@ class Single extends Component {
         if(this.state.py>this.state.tcy-1){//hit bottom wall
             this.endgame();
         }
-        ctx.fillStyle = "black"
-        ctx.fillRect(0,0,1000,500);
-        ctx.fillStyle = "lime"
         for(let i=0;i<this.state.trail.length;i++){//plot the snake according to trail
-            ctx.fillRect(this.state.trail[i].x*this.state.gs,this.state.trail[i].y*this.state.gs,this.state.gs-2,this.state.gs-2);
             if(this.state.trail[i].x === this.state.px && this.state.trail[i].y === this.state.py){//player hits himself
                 if(this.state.xv === 0 && this.state.yv === 0){
                     this.setState({tail:5, score:0, px:25, py:12, xv:0, yv:0});
@@ -67,12 +63,18 @@ class Single extends Component {
                 score:this.state.score + 1
             });
         }
+        ctx.fillStyle = "black";
+        ctx.fillRect(0,0,1000,500);
+        ctx.fillStyle = "lime";
+        for(let i=0;i<this.state.trail.length;i++){
+            ctx.fillRect(this.state.trail[i].x*this.state.gs,this.state.trail[i].y*this.state.gs,this.state.gs-2,this.state.gs-2);
+        }
         ctx.fillStyle = "red";
         ctx.fillRect(this.state.ax*this.state.gs,this.state.ay*this.state.gs,this.state.gs-2,this.state.gs-2);
     }
 
     endgame(){
-        var name = window.prompt("Type your name to record your score on the leaderboard");
+        let name = window.prompt("Type your name to record your score on the leaderboard");
         if(name){
             let msg = sendsinglescore(name,this.state.score);
             console.log(msg);

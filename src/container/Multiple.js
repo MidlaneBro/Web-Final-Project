@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import loading from "../img/loading.gif";
+import {sendmultiplescore} from '../axios';
 
 class Multiple extends Component {
     constructor(props){
         super(props)
         this.state = {
-            score:0
+            score:0,
+            score_r:0
         }
     }
 
@@ -24,7 +26,14 @@ class Multiple extends Component {
             }
             ctx.fillStyle = "red";
             ctx.fillRect(this.props.game.other.ax*this.props.game.other.gs, this.props.game.other.ay*this.props.game.other.gs, this.props.game.other.gs-2, this.props.game.other.gs-2);
-            this.setState({score:this.props.game.snake1.score})
+            this.setState({score:this.props.game.snake1.score,score_r:this.props.game.snake2.score});
+        }
+        if(prevProps.status!==this.props.status && this.props.status==='end'){
+            let name = window.prompt("Type your name to record your score on the leaderboard");
+            if(name){
+                let msg = sendmultiplescore(name,this.state.score);
+                console.log(msg);
+            }
         }
     }
 
@@ -43,10 +52,10 @@ class Multiple extends Component {
                     <button className="button3" onClick={this.props.onClickReturn}>Return</button>
                 </div>
                 <div>
-                    {this.props.status==="start"? <canvas ref="canvas" width={1000} height={500}></canvas>:<img src={loading} alt="loading"/>}
+                    {this.props.status==="wait"? <img src={loading} alt="loading"/>:<canvas ref="canvas" width={1000} height={500}></canvas>}
                 </div>
                 <div>
-                    {this.props.status==="start"? <h1>Score:{this.state.score}</h1>:<h1>Waiting for another player...</h1>}
+                    {this.props.status==="wait"? <h1>Waiting for another player...</h1>:<h1>Your Score:{this.state.score}&nbsp;&nbsp;&nbsp;&nbsp;Opponent's Score:{this.state.score_r}</h1>}
                 </div>
             </div>
         );

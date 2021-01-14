@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    let data = LeaderBoard.create({name:req.body.name,score:req.body.score});
+    let data = LeaderBoard.create({name:req.body.name,mode:'single',score:req.body.score});
     res.send(data);
 })
 

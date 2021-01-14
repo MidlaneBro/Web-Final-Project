@@ -68,11 +68,9 @@ function App() {
       if(uuid===""){
         setuuid(JSON.parse(event.data)[0]);
       }
-      if(JSON.parse(event.data)[1]==='start'||JSON.parse(event.data)[1]==='wait'){
+      if(JSON.parse(event.data)[1]==='wait'||JSON.parse(event.data)[1]==='start'||JSON.parse(event.data)[1]==='end'){
+        console.log(JSON.parse(event.data));
         setstatus(JSON.parse(event.data)[1]);
-      }
-      if(JSON.parse(event.data)[0]!==uuid&&JSON.parse(event.data)[1]==='leave'){
-        setstatus('wait');
       }
       if(JSON.parse(event.data)[0]===""){
         setgame(JSON.parse(event.data)[1]);

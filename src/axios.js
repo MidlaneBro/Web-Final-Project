@@ -13,6 +13,11 @@ const sendsinglescore = async (name,score) => {
     return data;
 }
 
+const sendmultiplescore = async (name,score) => {
+    const {data} = await instance.post('/multiple_player',{name:name,score:score});
+    return data;
+}
+
 const switchToRule = async () => {
     const {data} = await instance.get('/rule');
     return data;
@@ -33,4 +38,4 @@ const backToLobby = async () => {
     return data;
 }
 
-export { switchToSingle, sendsinglescore, switchToRule, switchToLeaderboard, switchToAuthor, backToLobby };
+export { switchToSingle, sendsinglescore, sendmultiplescore, switchToRule, switchToLeaderboard, switchToAuthor, backToLobby };

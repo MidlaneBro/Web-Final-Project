@@ -6,6 +6,10 @@ const LeaderBoardSchema = new Schema({
         type: String,
         required: [true, 'Name field is required.']
     },
+    mode: {
+        type: String,
+        required: [true, 'Mode field is required.']
+    },
     score: {
         type: Number,
         required: [true,'Score field is required.']

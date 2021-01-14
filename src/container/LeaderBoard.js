@@ -1,4 +1,9 @@
+import {useState} from 'react';
+import {Button} from 'antd';
+
 function LeaderBoard(props){
+    const [mode, setmode] = useState('all');
+
     return(
         <div>
             <div className="head">
@@ -10,19 +15,28 @@ function LeaderBoard(props){
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Mode</th>
                             <th>Score</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {props.data.map(e=>
+                        {props.data.filter(e=>e.mode!==mode).map(e=>
                             <tr>
                                 <td>{e.name}</td>
+                                <td>{e.mode}</td>
                                 <td>{e.score}</td>
                             </tr>
                         )}
                     </tbody>
                 </table>
-                <h2>Top 10</h2>
+                <br></br>
+            </div>
+            <div>
+                <Button type="primary" size="large" onClick={()=>setmode('all')}>All</Button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <Button type="primary" size="large" onClick={()=>setmode('multiple')}>Single</Button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <Button type="primary" size="large" onClick={()=>setmode('single')}>Multiple</Button>
             </div>
         </div>
     );
