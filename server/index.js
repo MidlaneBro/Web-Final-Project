@@ -84,6 +84,7 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
     if(snake2.py > other.tcy-1 && snake2.alive){
         endgame(room,uuid2,'snake2');
     }
+    //snake1 death
     for(let i=0;i<snake1.trail.length;i++){
         if(snake1.trail[i].x === snake1.px && snake1.trail[i].y === snake1.py){
             if(snake1.xv !== 0 || snake1.yv !== 0){
@@ -96,6 +97,7 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
             }
         }
     }
+    //snake2 death
     for(let i=0;i<snake2.trail.length;i++){
         if(snake2.trail[i].x === snake2.px && snake2.trail[i].y === snake2.py){
             if(snake2.xv !==0 || snake2.yv !==0){
@@ -108,6 +110,14 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
             }
         }
     }
+    //snake hit gray
+    for(let i=0;i<other.gray.length;i++){
+            if(snake2.px === other.gray[i].x && snake2.py === other.gray[i].y)
+                endgame(room,uuid2,'snake2');
+            else if(snake1.px === other.gray[i].x && snake1.py === other.gray[i].y)
+                endgame(room,uuid1,'snake1');
+        }
+
     if(!snake1.alive && !snake2.alive){
         clearInterval(gameid);
     }
@@ -121,15 +131,51 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
     }
     if((other.ax === snake1.px && other.ay === snake1.py) || (other.ax === snake2.px && other.ay === snake2.py)){
         if(other.ax === snake1.px && other.ay === snake1.py){
-            snake1.tail += 1;
-            snake1.score += 1;
+            switch(other.a_type){
+                case 2:
+                    snake1.tail += 1;
+                    snake1.score += 10;
+                    break;
+                case 3:
+                    snake1.tail -= 2;
+                    snake1.score += 1;
+                    break;
+                case 4:
+                    snake1.tail += 5;
+                    snake1.score += 1;
+                    break;
+                default:
+                    snake1.tail += 1;
+                    snake1.score += 1;
+                    other.gray = [...other.gray, {x:Math.floor(Math.random()*other.tcx),y:Math.floor(Math.random()*other.tcy)}]
+                    break;
+            }
         }
         if(other.ax === snake2.px && other.ay === snake2.py){
-            snake2.tail += 1;
-            snake2.score += 1;
+            switch(other.a_type){
+                case 2:
+                    snake2.tail += 1;
+                    snake2.score += 10;
+                    break;
+                case 3:
+                    snake2.tail -= 2;
+                    snake2.score += 1;
+                    break;
+                case 4:
+                    snake2.tail += 5;
+                    snake2.score += 1;
+                    break;
+                default:
+                    snake2.tail += 1;
+                    snake2.score += 1;
+                    other.gray = [...other.gray, {x:Math.floor(Math.random()*other.tcx),y:Math.floor(Math.random()*other.tcy)}]
+                    break;
+            }
         }
+        other.a_type = Math.floor(Math.random()*6);
         other.ax = Math.floor(Math.random()*other.tcx);
         other.ay = Math.floor(Math.random()*other.tcy);
+        //console.log(other.gray)
     }
     if(uuid1 in rooms[room]){
         rooms[room][uuid1].send(JSON.stringify(["",{snake1:snake1,snake2:snake2,other:other}]));
@@ -250,7 +296,9 @@ db.once('open', () => {
                                 tcx: 50,
                                 tcy: 25,
                                 ax: Math.floor(Math.random()*50),
-                                ay: Math.floor(Math.random()*25)
+                                ay: Math.floor(Math.random()*25),
+                                a_type:0,
+                                gray: []
                             }
                             rooms[room]['gameid'] = setInterval(()=>game(room,users[0].uuid,users[1].uuid,rooms[room]['snake1'],rooms[room]['snake2'],rooms[room]['other'],rooms[room]['gameid']),1000/10);
                             console.log(`Start game with gameid:${rooms[room]['gameid']}`);

@@ -12,6 +12,8 @@ class Single extends Component {
             tcy:25, //tile-count-y
             ax:15, //apple-x
             ay:15, //apple-y
+            a_type:0,
+            gray:[],
             xv:0, //x-velocity
             yv:0, //y-velocity
             trail:[], //[{x,y},{x,y},...]
@@ -40,7 +42,7 @@ class Single extends Component {
             this.endgame();
         }
         for(let i=0;i<this.state.trail.length;i++){//plot the snake according to trail
-            if(this.state.trail[i].x === this.state.px && this.state.trail[i].y === this.state.py){//player hits himself
+            if(this.state.trail[i].x === this.state.px && this.state.trail[i].y === this.state.py ){//player hits himself
                 if(this.state.xv === 0 && this.state.yv === 0){
                     this.setState({tail:5, score:0, px:25, py:12, xv:0, yv:0});
                 }
@@ -49,6 +51,10 @@ class Single extends Component {
                 }
             }
         }
+        for(let i=0;i<this.state.gray.length;i++){//snake hit gray
+            if(this.state.px === this.state.gray[i].x && this.state.py === this.state.gray[i].y)
+                this.endgame();
+        }
         this.setState({ trail: [...this.state.trail, {x:this.state.px,y:this.state.py}] }) //simple value
         while(this.state.trail.length>this.state.tail){//shorten the snake(end the game)
             var array = [...this.state.trail]; // make a separate copy of the array
@@ -56,12 +62,42 @@ class Single extends Component {
             this.setState({trail: array});
         }
         if(this.state.ax === this.state.px && this.state.ay === this.state.py){//eat an apple
-            this.setState({
-                ax:Math.floor(Math.random()*this.state.tcx),
-                ay:Math.floor(Math.random()*this.state.tcy),
-                tail:this.state.tail + 1,
-                score:this.state.score + 1
-            });
+            switch(this.state.a_type){
+                case 2:
+                    this.setState({
+                        ax:Math.floor(Math.random()*this.state.tcx),
+                        ay:Math.floor(Math.random()*this.state.tcy),
+                        tail:this.state.tail + 1,
+                        score:this.state.score + 10
+                    });
+                    break;
+                case 3:
+                    this.setState({
+                        ax:Math.floor(Math.random()*this.state.tcx),
+                        ay:Math.floor(Math.random()*this.state.tcy),
+                        tail:this.state.tail - 2,
+                        score:this.state.score + 1
+                    });
+                    break;
+                case 4:
+                    this.setState({
+                        ax:Math.floor(Math.random()*this.state.tcx),
+                        ay:Math.floor(Math.random()*this.state.tcy),
+                        tail:this.state.tail + 5,
+                        score:this.state.score + 1
+                    });
+                    break;
+                default:
+                    this.setState({
+                        ax:Math.floor(Math.random()*this.state.tcx),
+                        ay:Math.floor(Math.random()*this.state.tcy),
+                        tail:this.state.tail + 1,
+                        score:this.state.score + 1,
+                        gray: [...this.state.gray, {x:Math.floor(Math.random()*this.state.tcx),y:Math.floor(Math.random()*this.state.tcy)}]
+                    });
+                    break;
+            }
+            this.setState({a_type: Math.floor(Math.random()*6)});
         }
         ctx.fillStyle = "black";
         ctx.fillRect(0,0,1000,500);
@@ -69,8 +105,28 @@ class Single extends Component {
         for(let i=0;i<this.state.trail.length;i++){
             ctx.fillRect(this.state.trail[i].x*this.state.gs,this.state.trail[i].y*this.state.gs,this.state.gs-2,this.state.gs-2);
         }
-        ctx.fillStyle = "red";
+        console.log(this.state.a_type)
+        switch(this.state.a_type){
+            case 2:
+                ctx.fillStyle = "blue"; //10 points
+                break;
+            case 3:
+                ctx.fillStyle = "purple"; // length - 2
+                break;
+            case 4:
+                ctx.fillStyle = "white"; // length + 5
+                break;
+            default:
+                ctx.fillStyle = "red";
+                break;
+        }
         ctx.fillRect(this.state.ax*this.state.gs,this.state.ay*this.state.gs,this.state.gs-2,this.state.gs-2);
+        ctx.fillStyle = "gray";
+        for(let i=0;i<this.state.gray.length;i++){
+            ctx.fillRect(this.state.gray[i].x*this.state.gs,this.state.gray[i].y*this.state.gs,this.state.gs-2,this.state.gs-2);
+        }
+
+
     }
 
     endgame(){
