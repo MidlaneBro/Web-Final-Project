@@ -24,22 +24,26 @@ class Multiple extends Component {
             for(let i=0;i<this.props.game.snake2.trail.length;i++){//plot the snake2 according to trail
                 ctx.fillRect(this.props.game.snake2.trail[i].x*this.props.game.other.gs, this.props.game.snake2.trail[i].y*this.props.game.other.gs, this.props.game.other.gs-2, this.props.game.other.gs-2);
             }
-            switch(this.props.game.other.a_type){
-                case 2:
-                    ctx.fillStyle = "blue"; //10 points
-                    break;
-                case 3:
-                    ctx.fillStyle = "purple"; // length - 2
-                    break;
-                case 4:
-                    ctx.fillStyle = "white"; // length + 5
-                    break;
-                default:
-                    ctx.fillStyle = "red";
-                    break;
+            ctx.fillStyle = "red";
+            for(let i=0;i<this.props.game.other.apple.length;i++){
+                ctx.fillRect(this.props.game.other.apple[i].x*this.props.game.other.gs, this.props.game.other.apple[i].y*this.props.game.other.gs, this.props.game.other.gs-2, this.props.game.other.gs-2);
             }
-            ctx.fillRect(this.props.game.other.ax*this.props.game.other.gs, this.props.game.other.ay*this.props.game.other.gs, this.props.game.other.gs-2, this.props.game.other.gs-2);
-            
+            for(let i=0;i<this.props.game.other.tool.length;i++){
+                switch(this.props.game.other.tool[i].type){
+                    case 0: //point
+                        ctx.fillStyle = "yellow";
+                        break;
+                    case 1: //grow
+                        ctx.fillStyle = "green";
+                        break;
+                    case 2: //shrink
+                        ctx.fillStyle = "purple";
+                        break;
+                    default:
+                        break;
+                }
+                ctx.fillRect(this.props.game.other.tool[i].x*this.props.game.other.gs, this.props.game.other.tool[i].y*this.props.game.other.gs, this.props.game.other.gs-2, this.props.game.other.gs-2);
+            }
             ctx.fillStyle = "gray";
             for(let i=0;i<this.props.game.other.gray.length;i++){
                 ctx.fillRect(this.props.game.other.gray[i].x*this.props.game.other.gs,this.props.game.other.gray[i].y*this.props.game.other.gs,this.props.game.other.gs-2,this.props.game.other.gs-2);

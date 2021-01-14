@@ -50,38 +50,49 @@ const rooms = {}
         uuid2: ws2
         "snake1": {uuid,alive,px,py,xv,yv,trail,tail,score}
         "snake2": {uuid,alive,px,py,xv,yv,trail,tail,score}
-        "other": {gs,tcx,tcy,ax,ay}
+        "other": {gs,tcx,tcy,apple,tool,gray}
         "gameid": setinterval of game()
     }
 }*/
+
+function occupied(x, y, snake1, snake2, other) {
+    for(let i=0;i<snake1.trail.length;i++){
+        if(x===snake1.trail[i].x && y===snake1.trail[i].y){
+            return true;
+        }
+    }
+    for(let i=0;i<snake2.trail.length;i++){
+        if(x===snake2.trail[i].x && y===snake2.trail[i].y){
+            return true;
+        }
+    }
+    for(let i=0;i<other.apple.length;i++){
+        if(x===other.apple[i].x && y===other.apple[i].y){
+            return true;
+        }
+    }
+    for(let i=0;i<other.tool.length;i++){
+        if(x===other.tool[i].x && y===other.tool[i].y){
+            return true;
+        }
+    }
+    for(let i=0;i<other.gray.length;i++){
+        if(x===other.gray[i].x && y===other.gray[i].y){
+            return true;
+        }
+    }
+    return false;
+}
 
 const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
     snake1.px = snake1.px + snake1.xv;
     snake1.py = snake1.py + snake1.yv;
     snake2.px = snake2.px + snake2.xv;
     snake2.py = snake2.py + snake2.yv;
-    if(snake1.px < 0 && snake1.alive){
+    if((snake1.px < 0 || snake1.px > other.tcx-1 || snake1.py < 0 || snake1.py > other.tcy-1) && snake1.alive){
         endgame(room,uuid1,'snake1');
     }
-    if(snake1.px > other.tcx-1 && snake1.alive){
-        endgame(room,uuid1,'snake1');
-    }
-    if(snake1.py < 0 && snake1.alive){
-        endgame(room,uuid1,'snake1');
-    }
-    if(snake1.py > other.tcy-1 && snake1.alive){
-        endgame(room,uuid1,'snake1');
-    }
-    if(snake2.px < 0 && snake2.alive){
-        endgame(room,uuid2,'snake2');
-    }
-    if(snake2.px > other.tcx-1 && snake2.alive){
-        endgame(room,uuid2,'snake2');
-    }
-    if(snake2.py < 0 && snake2.alive){
-        endgame(room,uuid2,'snake2');
-    }
-    if(snake2.py > other.tcy-1 && snake2.alive){
+    if((snake2.px < 0 || snake2.px > other.tcx-1 || snake2.py < 0 || snake2.py > other.tcy-1) && snake2.alive){
         endgame(room,uuid2,'snake2');
     }
     //snake1 death
@@ -112,12 +123,11 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
     }
     //snake hit gray
     for(let i=0;i<other.gray.length;i++){
-            if(snake2.px === other.gray[i].x && snake2.py === other.gray[i].y)
-                endgame(room,uuid2,'snake2');
-            else if(snake1.px === other.gray[i].x && snake1.py === other.gray[i].y)
-                endgame(room,uuid1,'snake1');
-        }
-
+        if(snake2.px === other.gray[i].x && snake2.py === other.gray[i].y)
+            endgame(room,uuid2,'snake2');
+        if(snake1.px === other.gray[i].x && snake1.py === other.gray[i].y)
+            endgame(room,uuid1,'snake1');
+    }
     if(!snake1.alive && !snake2.alive){
         clearInterval(gameid);
     }
@@ -129,53 +139,82 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
     while(snake2.trail.length > snake2.tail){
         snake2.trail.splice(0,1);
     }
-    if((other.ax === snake1.px && other.ay === snake1.py) || (other.ax === snake2.px && other.ay === snake2.py)){
-        if(other.ax === snake1.px && other.ay === snake1.py){
-            switch(other.a_type){
-                case 2:
-                    snake1.tail += 1;
-                    snake1.score += 10;
-                    break;
-                case 3:
-                    snake1.tail -= 2;
-                    snake1.score += 1;
-                    break;
-                case 4:
-                    snake1.tail += 5;
-                    snake1.score += 1;
-                    break;
-                default:
-                    snake1.tail += 1;
-                    snake1.score += 1;
-                    other.gray = [...other.gray, {x:Math.floor(Math.random()*other.tcx),y:Math.floor(Math.random()*other.tcy)}]
-                    break;
+    //eat apple
+    for(let i=0;i<other.apple.length;i++){
+        if((snake1.px === other.apple[i].x && snake1.py === other.apple[i].y) || (snake2.px === other.apple[i].x && snake2.py === other.apple[i].y)){
+            if(snake1.px === other.apple[i].x && snake1.py === other.apple[i].y){
+                snake1.tail += 1;
+                snake1.score += 1;
             }
-        }
-        if(other.ax === snake2.px && other.ay === snake2.py){
-            switch(other.a_type){
-                case 2:
-                    snake2.tail += 1;
-                    snake2.score += 10;
-                    break;
-                case 3:
-                    snake2.tail -= 2;
-                    snake2.score += 1;
-                    break;
-                case 4:
-                    snake2.tail += 5;
-                    snake2.score += 1;
-                    break;
-                default:
-                    snake2.tail += 1;
-                    snake2.score += 1;
-                    other.gray = [...other.gray, {x:Math.floor(Math.random()*other.tcx),y:Math.floor(Math.random()*other.tcy)}]
-                    break;
+            if(snake2.px === other.apple[i].x && snake2.py === other.apple[i].y){
+                snake2.tail +=1;
+                snake2.score += 1;
             }
+            let apple_x = Math.floor(Math.random()*other.tcx);
+            let apple_y = Math.floor(Math.random()*other.tcy);
+            while(occupied(apple_x,apple_y,snake1,snake2,other)){
+                apple_x = Math.floor(Math.random()*other.tcx);
+                apple_y = Math.floor(Math.random()*other.tcy);
+            }
+            other.apple[i].x = apple_x;
+            other.apple[i].y = apple_y;
         }
-        other.a_type = Math.floor(Math.random()*6);
-        other.ax = Math.floor(Math.random()*other.tcx);
-        other.ay = Math.floor(Math.random()*other.tcy);
-        //console.log(other.gray)
+    }
+    for(let i=0;i<other.tool.length;i++){
+        if((snake1.px === other.tool[i].x && snake1.py === other.tool[i].y) || (snake2.px === other.tool[i].x && snake2.py === other.tool[i].y)){
+            if(snake1.px === other.tool[i].x && snake1.py === other.tool[i].y){
+                switch (other.tool[i].type) {
+                    case 0: //point
+                        snake1.tail += 1;
+                        snake1.score += 5;
+                        break;
+                    case 1: //grow
+                        snake1.tail += 10;
+                        snake1.score += 3;
+                        break;
+                    case 2: //shrink
+                        snake1.tail = snake1.tail>5? snake1.tail-5 : 1;
+                        snake1.score += 1;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if(snake2.px === other.tool[i].x && snake2.py === other.tool[i].y){
+                switch (other.tool[i].type) {
+                    case 0: //point
+                        snake2.tail += 1;
+                        snake2.score += 5;
+                        break;
+                    case 1: //grow
+                        snake2.tail += 10;
+                        snake2.score += 3;
+                        break;
+                    case 2: //shrink
+                        snake2.tail = snake2.tail>5? snake2.tail-5 : 1;
+                        snake2.score += 1;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            let tool_x = Math.floor(Math.random()*other.tcx);
+            let tool_y = Math.floor(Math.random()*other.tcy);
+            while(occupied(tool_x,tool_y,snake1,snake2,other)){
+                tool_x = Math.floor(Math.random()*other.tcx);
+                tool_y = Math.floor(Math.random()*other.tcy);
+            }
+            other.tool[i].type = Math.floor(Math.random()*3);
+            other.tool[i].x = tool_x;
+            other.tool[i].y = tool_y;
+            let gray_x = Math.floor(Math.random()*other.tcx);
+            let gray_y = Math.floor(Math.random()*other.tcy);
+            while(occupied(gray_x,gray_y,snake1,snake2,other)){
+                gray_x = Math.floor(Math.random()*other.tcx);
+                gray_y = Math.floor(Math.random()*other.tcy);
+            }
+            other.gray = [...other.gray, {x:gray_x,y:gray_y}];
+        }
     }
     if(uuid1 in rooms[room]){
         rooms[room][uuid1].send(JSON.stringify(["",{snake1:snake1,snake2:snake2,other:other}]));
@@ -186,6 +225,9 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
 }
 
 function endgame(room,uuid,snake) {
+    for(let i=0;i<rooms[room][snake].trail.length;i++){
+        rooms[room]['other'].gray.push({x:rooms[room][snake].trail[i].x,y:rooms[room][snake].trail[i].y});
+    }
     rooms[room][snake].alive = false;
     rooms[room][snake].xv = 0;
     rooms[room][snake].yv = 0;
@@ -295,9 +337,15 @@ db.once('open', () => {
                                 gs: 20,
                                 tcx: 50,
                                 tcy: 25,
-                                ax: Math.floor(Math.random()*50),
-                                ay: Math.floor(Math.random()*25),
-                                a_type:0,
+                                apple:[
+                                    {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
+                                    {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
+                                    {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)}
+                                ],
+                                tool:[
+                                    {type:Math.floor(Math.random()*3),x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
+                                    {type:Math.floor(Math.random()*3),x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
+                                ],
                                 gray: []
                             }
                             rooms[room]['gameid'] = setInterval(()=>game(room,users[0].uuid,users[1].uuid,rooms[room]['snake1'],rooms[room]['snake2'],rooms[room]['other'],rooms[room]['gameid']),1000/10);
