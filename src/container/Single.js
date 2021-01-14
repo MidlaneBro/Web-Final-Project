@@ -21,8 +21,8 @@ class Single extends Component {
                 {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)}
             ],
             tool:[
-                {type:5,x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
-                {type:5,x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
+                {type:Math.floor(Math.random()*6),x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
+                {type:Math.floor(Math.random()*6),x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
             ],//type:0->point,1->grow,2->shrink,3->speed-up,4->speed-down,5->return
             gray:[],
             return:false
@@ -168,7 +168,6 @@ class Single extends Component {
                 }
                 let array = this.state.tool;
                 array[i].type = Math.floor(Math.random()*6);
-                //array[i].type = 5;
                 array[i].x = tool_x;
                 array[i].y = tool_y;
                 this.setState({tool:array});
