@@ -150,6 +150,7 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
                 snake2.tail +=1;
                 snake2.score += 1;
             }
+            other.count += 1;
             let apple_x = Math.floor(Math.random()*other.tcx);
             let apple_y = Math.floor(Math.random()*other.tcy);
             while(occupied(apple_x,apple_y,snake1,snake2,other)){
@@ -158,55 +159,15 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
             }
             other.apple[i].x = apple_x;
             other.apple[i].y = apple_y;
-        }
-    }
-    for(let i=0;i<other.tool.length;i++){
-        if((snake1.px === other.tool[i].x && snake1.py === other.tool[i].y) || (snake2.px === other.tool[i].x && snake2.py === other.tool[i].y)){
-            if(snake1.px === other.tool[i].x && snake1.py === other.tool[i].y){
-                switch (other.tool[i].type) {
-                    case 0: //point
-                        snake1.tail += 1;
-                        snake1.score += 5;
-                        break;
-                    case 1: //grow
-                        snake1.tail += 10;
-                        snake1.score += 3;
-                        break;
-                    case 2: //shrink
-                        snake1.tail = snake1.tail>5? snake1.tail-5 : 1;
-                        snake1.score += 1;
-                        break;
-                    default:
-                        break;
+            if(other.count%3===0){
+                let tool_x = Math.floor(Math.random()*other.tcx);
+                let tool_y = Math.floor(Math.random()*other.tcy);
+                while(occupied(tool_x,tool_y,snake1,snake2,other)){
+                    tool_x = Math.floor(Math.random()*other.tcx);
+                    tool_y = Math.floor(Math.random()*other.tcy);
                 }
+                other.tool = [...other.tool, {type:Math.floor(Math.random()*6),x:tool_x,y:tool_y}];
             }
-            if(snake2.px === other.tool[i].x && snake2.py === other.tool[i].y){
-                switch (other.tool[i].type) {
-                    case 0: //point
-                        snake2.tail += 1;
-                        snake2.score += 5;
-                        break;
-                    case 1: //grow
-                        snake2.tail += 10;
-                        snake2.score += 3;
-                        break;
-                    case 2: //shrink
-                        snake2.tail = snake2.tail>5? snake2.tail-5 : 1;
-                        snake2.score += 1;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            let tool_x = Math.floor(Math.random()*other.tcx);
-            let tool_y = Math.floor(Math.random()*other.tcy);
-            while(occupied(tool_x,tool_y,snake1,snake2,other)){
-                tool_x = Math.floor(Math.random()*other.tcx);
-                tool_y = Math.floor(Math.random()*other.tcy);
-            }
-            other.tool[i].type = Math.floor(Math.random()*3);
-            other.tool[i].x = tool_x;
-            other.tool[i].y = tool_y;
             let gray_x = Math.floor(Math.random()*other.tcx);
             let gray_y = Math.floor(Math.random()*other.tcy);
             while(occupied(gray_x,gray_y,snake1,snake2,other)){
@@ -216,6 +177,90 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
             other.gray = [...other.gray, {x:gray_x,y:gray_y}];
         }
     }
+    for(let i=0;i<other.tool.length;i++){
+        if((snake1.px === other.tool[i].x && snake1.py === other.tool[i].y) || (snake2.px === other.tool[i].x && snake2.py === other.tool[i].y)){
+            if(snake1.px === other.tool[i].x && snake1.py === other.tool[i].y){
+                switch (other.tool[i].type) {
+                    case 0: //point
+                        snake1.score += 5;
+                        break;
+                    case 1: //grow
+                        snake1.tail += 10;
+                        snake1.score += 3;
+                        break;
+                    case 2: //molt
+                        for(let i=0;i<snake1.trail.length-1;i++){
+                            other.gray = [...other.gray,{x:snake1.trail[i].x,y:snake1.trail[i].y}];
+                        }
+                        snake1.tail = 1;
+                        snake1.score += 3;
+                        break;
+                    case 3: //speed-up
+                        snake1.score += 3;
+                        break;
+                    case 4: //speed-down
+                        break;
+                    case 5: //return
+                        snake1.px = snake1.trail[0].x;
+                        snake1.py = snake1.trail[0].y;
+                        if(snake1.trail.length===1){
+                            snake1.xv = -snake1.xv;
+                            snake1.yv = -snake1.yv;
+                        }
+                        else{
+                            snake1.xv = snake1.trail[0].x - snake1.trail[1].x;
+                            snake1.yv = snake1.trail[0].y - snake1.trail[1].y;
+                        }
+                        snake1.trail = snake1.trail.reverse();
+                        snake1.score += 3;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if(snake2.px === other.tool[i].x && snake2.py === other.tool[i].y){
+                switch (other.tool[i].type) {
+                    case 0: //point
+                        snake2.score += 5;
+                        break;
+                    case 1: //grow
+                        snake2.tail += 10;
+                        snake2.score += 3;
+                        break;
+                    case 2: //molt
+                        for(let i=0;i<snake2.trail.length-1;i++){
+                            other.gray = [...other.gray,{x:snake2.trail[i].x,y:snake2.trail[i].y}];
+                        }
+                        snake2.tail = 1;
+                        snake2.score += 3;
+                        break;
+                    case 3: //speed-up
+                        snake2.score += 3;
+                        break;
+                    case 4: //speed-down
+                        break;
+                    case 5: //return
+                        snake2.px = snake2.trail[0].x;
+                        snake2.py = snake2.trail[0].y;
+                        if(snake2.trail.length===1){
+                            snake2.xv = -snake2.xv;
+                            snake2.yv = -snake2.yv;
+                        }
+                        else{
+                            snake2.xv = snake2.trail[0].x - snake2.trail[1].x;
+                            snake2.yv = snake2.trail[0].y - snake2.trail[1].y;
+                        }
+                        snake2.trail = snake2.trail.reverse();
+                        snake2.score += 3;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            other.tool[i] = null;
+        }
+    }
+    other.tool = other.tool.filter(e=>e!==null);
     if(uuid1 in rooms[room]){
         rooms[room][uuid1].send(JSON.stringify(["",{snake1:snake1,snake2:snake2,other:other}]));
     }
@@ -342,10 +387,8 @@ db.once('open', () => {
                                     {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
                                     {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)}
                                 ],
-                                tool:[
-                                    {type:Math.floor(Math.random()*3),x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
-                                    {type:Math.floor(Math.random()*3),x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
-                                ],
+                                count: 0,
+                                tool: [],
                                 gray: []
                             }
                             rooms[room]['gameid'] = setInterval(()=>game(room,users[0].uuid,users[1].uuid,rooms[room]['snake1'],rooms[room]['snake2'],rooms[room]['other'],rooms[room]['gameid']),1000/10);

@@ -36,8 +36,17 @@ class Multiple extends Component {
                     case 1: //grow
                         ctx.fillStyle = "green";
                         break;
-                    case 2: //shrink
+                    case 2: //molt
                         ctx.fillStyle = "purple";
+                        break;
+                    case 3: //speed-up
+                        ctx.fillStyle = "aqua";
+                        break;
+                    case 4: //speed-down
+                        ctx.fillStyle = "white";
+                        break; 
+                    case 5: //return
+                        ctx.fillStyle = "blue";
                         break;
                     default:
                         break;

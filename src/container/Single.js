@@ -3,52 +3,47 @@ import {sendsinglescore} from '../axios';
 
 class Single extends Component {
     constructor(props){
-        super(props)
-        this.state = {
-            px:25, //position-x
-            py:12, //position-y
-            xv:0, //x-velocity
-            yv:0, //y-velocity
-            trail:[], //[{x,y},{x,y},...]
-            tail:5, //length of snake
-            score:0,
-            gs:20, //grid size
-            tcx:50, //tile-count-x
-            tcy:25, //tile-count-y
-            apple:[
-                {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
-                {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
-                {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)}
-            ],
-            tool:[
-                {type:Math.floor(Math.random()*6),x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
-                {type:Math.floor(Math.random()*6),x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
-            ],//type:0->point,1->grow,2->shrink,3->speed-up,4->speed-down,5->return
-            gray:[],
-            return:false
-        }
+        super(props);
+        this.px = 25; //position-x
+        this.py = 12; //position-y
+        this.xv = 0; //x-velocity
+        this.yv = 0; //y-velocity
+        this.trail = []; //[{x,y},{x,y},...]
+        this.tail = 5; //length of snake
+        this.state = { score:0 };
+        this.gs = 20; //grid size
+        this.tcx = 50; //tile-count-x
+        this.tcy = 25; //tile-count-y
+        this.apple = [
+            {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
+            {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
+            {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)}
+        ];
+        this.count = 0;//when count%3===0, generate 1 tool
+        this.tool = [];//type:0->point,1->grow,2->shrink,3->speed-up,4->speed-down,5->return
+        this.gray = [];
         this.id = null;
         this.speed = 10;
     }
 
     occupied = (x,y) => { //check whether the tile is occupied by trail, apple or gray
-        for(let i=0;i<this.state.trail.length;i++){
-            if(x===this.state.trail[i].x && y===this.state.trail[i].y){
+        for(let i=0;i<this.trail.length;i++){
+            if(x===this.trail[i].x && y===this.trail[i].y){
                 return true;
             }
         }
-        for(let i=0;i<this.state.apple.length;i++){
-            if(x===this.state.apple[i].x && y===this.state.apple[i].y){
+        for(let i=0;i<this.apple.length;i++){
+            if(x===this.apple[i].x && y===this.apple[i].y){
                 return true;
             }
         }
-        for(let i=0;i<this.state.tool.length;i++){
-            if(x===this.state.tool[i].x && y===this.state.tool[i].y){
+        for(let i=0;i<this.tool.length;i++){
+            if(x===this.tool[i].x && y===this.tool[i].y){
                 return true;
             }
         }
-        for(let i=0;i<this.state.gray.length;i++){
-            if(x===this.state.gray[i].x && y===this.state.gray[i].y){
+        for(let i=0;i<this.gray.length;i++){
+            if(x===this.gray[i].x && y===this.gray[i].y){
                 return true;
             }
         }
@@ -56,87 +51,84 @@ class Single extends Component {
     }
 
     game = () => {
-        console.log(this.state)
         const ctx = this.refs.canvas.getContext("2d");
-        this.setState({
-            px:this.state.px + this.state.xv,
-            py:this.state.py + this.state.yv
-        });
-        if(this.state.px<0){//hit left wall
+        this.px = this.px + this.xv;
+        this.py = this.py + this.yv;
+        if(this.px<0){//hit left wall
             this.endgame();
         }
-        if(this.state.px>this.state.tcx-1){//hit right wall
+        if(this.px>this.tcx-1){//hit right wall
             this.endgame();
         }
-        if(this.state.py<0){//hit upper wall
+        if(this.py<0){//hit upper wall
             this.endgame();
         }
-        if(this.state.py>this.state.tcy-1){//hit bottom wall
+        if(this.py>this.tcy-1){//hit bottom wall
             this.endgame();
         }
-        for(let i=0;i<this.state.trail.length;i++){//snake hit itself?
-            if(this.state.trail[i].x === this.state.px && this.state.trail[i].y === this.state.py ){
-                if(this.state.xv === 0 && this.state.yv === 0){
-                    this.setState({tail:5, score:0, px:25, py:12, xv:0, yv:0});
-                }
-                else{
+        for(let i=0;i<this.trail.length;i++){//snake hit itself?
+            if(this.trail[i].x === this.px && this.trail[i].y === this.py ){
+                if(this.xv!==0 || this.yv!==0){
                     this.endgame();
                 }
             }
         }
-        for(let i=0;i<this.state.gray.length;i++){//snake hit gray
-            if(this.state.px === this.state.gray[i].x && this.state.py === this.state.gray[i].y)
+        for(let i=0;i<this.gray.length;i++){//snake hit gray
+            if(this.px === this.gray[i].x && this.py === this.gray[i].y)
                 this.endgame();
         }
-        this.setState({ trail: [...this.state.trail, {x:this.state.px,y:this.state.py}] }) //extend trail
-        while(this.state.trail.length>this.state.tail){//slice the snake to fit length
-            let array = this.state.trail;
-            array.splice(0,1);
-            this.setState({trail:array});
+        this.trail = [...this.trail, {x:this.px,y:this.py}];//extend trail
+        while(this.trail.length>this.tail){//slice the snake to fit length
+            this.trail.splice(0,1);
         }
-        for(let i=0;i<this.state.apple.length;i++){//eat an apple
-            if(this.state.px === this.state.apple[i].x && this.state.py === this.state.apple[i].y){
-                let apple_x = Math.floor(Math.random()*this.state.tcx);
-                let apple_y = Math.floor(Math.random()*this.state.tcy);
+        for(let i=0;i<this.apple.length;i++){//eat an apple
+            if(this.px === this.apple[i].x && this.py === this.apple[i].y){
+                this.tail += 1;
+                this.setState({score: this.state.score + 1});
+                this.count += 1;
+                let apple_x = Math.floor(Math.random()*this.tcx);
+                let apple_y = Math.floor(Math.random()*this.tcy);
                 while(this.occupied(apple_x,apple_y)){
-                    apple_x = Math.floor(Math.random()*this.state.tcx);
-                    apple_y = Math.floor(Math.random()*this.state.tcy);
+                    apple_x = Math.floor(Math.random()*this.tcx);
+                    apple_y = Math.floor(Math.random()*this.tcy);
                 }
-                let array = this.state.apple;
-                array[i].x = apple_x;
-                array[i].y = apple_y;
-                this.setState({
-                    apple:array,
-                    tail: this.state.tail + 1,
-                    score: this.state.score + 1
-                })
+                this.apple[i].x = apple_x;
+                this.apple[i].y = apple_y;
+                if(this.count%3===0){
+                    let tool_x = Math.floor(Math.random()*this.tcx);
+                    let tool_y = Math.floor(Math.random()*this.tcy);
+                    while(this.occupied(tool_x,tool_y)){
+                        tool_x = Math.floor(Math.random()*this.tcx);
+                        tool_y = Math.floor(Math.random()*this.tcy);
+                    }
+                    this.tool = [...this.tool,{type:Math.floor(Math.random()*6),x:tool_x,y:tool_y}];
+                }
+                let gray_x = Math.floor(Math.random()*this.tcx);
+                let gray_y = Math.floor(Math.random()*this.tcy);
+                while(this.occupied(gray_x,gray_y)){
+                    gray_x = Math.floor(Math.random()*this.tcx);
+                    gray_y = Math.floor(Math.random()*this.tcy);
+                }
+                this.gray = [...this.gray, {x:gray_x,y:gray_y}];
                 break;
             }
         }
-        for(let i=0;i<this.state.tool.length;i++){//eat an tool
-            if(this.state.px === this.state.tool[i].x && this.state.py === this.state.tool[i].y){
-                switch (this.state.tool[i].type) {
+        for(let i=0;i<this.tool.length;i++){//eat an tool
+            if(this.px === this.tool[i].x && this.py === this.tool[i].y){
+                switch (this.tool[i].type) {
                     case 0: //point
-                        this.setState({
-                            score:this.state.score + 5
-                        })
+                        this.setState({score:this.state.score + 5})
                         break;
                     case 1: //grow
-                        this.setState({
-                            tail:this.state.tail + 10,
-                            score:this.state.score + 3
-                        });
+                        this.tail += 10;
+                        this.setState({score:this.state.score + 3});
                         break;
                     case 2: //molt
-                        for(let i=0;i<this.state.trail.length-1;i++){
-                            this.setState({
-                                gray:[...this.state.gray,{x:this.state.trail[i].x,y:this.state.trail[i].y}]
-                            });
+                        for(let i=0;i<this.trail.length-1;i++){
+                            this.gray = [...this.gray,{x:this.trail[i].x,y:this.trail[i].y}];
                         }
-                        this.setState({
-                            tail:1,
-                            score:this.state.score + 3
-                        });
+                        this.tail = 1;
+                        this.setState({score:this.state.score + 3});
                         break;
                     case 3: //speed-up
                         this.speed += 1;
@@ -152,47 +144,38 @@ class Single extends Component {
                         this.id = setInterval(this.game,1000/this.speed);
                         break;
                     case 5: //return
-                        this.setState({
-                            return: true,
-                            score: this.state.score + 3
-                        })
+                        this.px = this.trail[0].x;
+                        this.py = this.trail[0].y;
+                        if(this.trail.length===1){
+                            this.xv = -this.xv;
+                            this.yv = -this.yv;
+                        }
+                        else{
+                            this.xv = this.trail[0].x - this.trail[1].x;
+                            this.yv = this.trail[0].y - this.trail[1].y;
+                        }
+                        this.trail = this.trail.reverse();
+                        this.setState({score: this.state.score + 3})
                         break;
                     default:
                         break;
                 }
-                let tool_x = Math.floor(Math.random()*this.state.tcx);
-                let tool_y = Math.floor(Math.random()*this.state.tcy);
-                while(this.occupied(tool_x,tool_y)){
-                    tool_x = Math.floor(Math.random()*this.state.tcx);
-                    tool_y = Math.floor(Math.random()*this.state.tcy);
-                }
-                let array = this.state.tool;
-                array[i].type = Math.floor(Math.random()*6);
-                array[i].x = tool_x;
-                array[i].y = tool_y;
-                this.setState({tool:array});
-                let gray_x = Math.floor(Math.random()*this.state.tcx);
-                let gray_y = Math.floor(Math.random()*this.state.tcy);
-                while(this.occupied(gray_x,gray_y)){
-                    gray_x = Math.floor(Math.random()*this.state.tcx);
-                    gray_y = Math.floor(Math.random()*this.state.tcy);
-                }
-                this.setState({gray: [...this.state.gray, {x:gray_x,y:gray_y}]});
+                this.tool.splice(i,1);
                 break;
             }
         }
         ctx.fillStyle = "black";
-        ctx.fillRect(0,0,this.state.gs*this.state.tcx,this.state.gs*this.state.tcy);
+        ctx.fillRect(0,0,this.gs*this.tcx,this.gs*this.tcy);
         ctx.fillStyle = "lime";
-        for(let i=0;i<this.state.trail.length;i++){
-            ctx.fillRect(this.state.trail[i].x*this.state.gs,this.state.trail[i].y*this.state.gs,this.state.gs-2,this.state.gs-2);
+        for(let i=0;i<this.trail.length;i++){
+            ctx.fillRect(this.trail[i].x*this.gs,this.trail[i].y*this.gs,this.gs-2,this.gs-2);
         }
         ctx.fillStyle = "red";
-        for(let i=0;i<this.state.apple.length;i++){
-            ctx.fillRect(this.state.apple[i].x*this.state.gs,this.state.apple[i].y*this.state.gs,this.state.gs-2,this.state.gs-2);
+        for(let i=0;i<this.apple.length;i++){
+            ctx.fillRect(this.apple[i].x*this.gs,this.apple[i].y*this.gs,this.gs-2,this.gs-2);
         }
-        for(let i=0;i<this.state.tool.length;i++){
-            switch (this.state.tool[i].type) {
+        for(let i=0;i<this.tool.length;i++){
+            switch (this.tool[i].type) {
                 case 0: //point
                     ctx.fillStyle = "yellow";
                     break;
@@ -214,11 +197,11 @@ class Single extends Component {
                 default:
                     break;
             }
-            ctx.fillRect(this.state.tool[i].x*this.state.gs,this.state.tool[i].y*this.state.gs,this.state.gs-2,this.state.gs-2);
+            ctx.fillRect(this.tool[i].x*this.gs,this.tool[i].y*this.gs,this.gs-2,this.gs-2);
         }
         ctx.fillStyle = "gray";
-        for(let i=0;i<this.state.gray.length;i++){
-            ctx.fillRect(this.state.gray[i].x*this.state.gs,this.state.gray[i].y*this.state.gs,this.state.gs-2,this.state.gs-2);
+        for(let i=0;i<this.gray.length;i++){
+            ctx.fillRect(this.gray[i].x*this.gs,this.gray[i].y*this.gs,this.gs-2,this.gs-2);
         }
     }
 
@@ -228,24 +211,21 @@ class Single extends Component {
             let msg = sendsinglescore(name,this.state.score);
             console.log(msg);
         }
-        this.setState({
-            tail:5,
-            score:0,
-            px:25,
-            py:12,
-            xv:0,
-            yv:0,
-            apple:[
-                {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
-                {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
-                {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)}
-            ],
-            tool:[
-                {type:Math.floor(Math.random()*6),x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
-                {type:Math.floor(Math.random()*6),x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
-            ],
-            gray:[]
-        });
+        this.px = 25; //position-x
+        this.py = 12; //position-y
+        this.xv = 0; //x-velocity
+        this.yv = 0; //y-velocity
+        this.trail = []; //[{x,y},{x,y},...]
+        this.tail = 5; //length of snake
+        this.setState({score:0});
+        this.apple = [
+            {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
+            {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)},
+            {x:Math.floor(Math.random()*50),y:Math.floor(Math.random()*25)}
+        ];
+        this.count = 0;
+        this.tool = [];//type:0->point,1->grow,2->shrink,3->speed-up,4->speed-down,5->return
+        this.gray = [];
         this.speed = 10;
         clearInterval(this.id);
         this.id = setInterval(this.game,1000/this.speed);
@@ -254,20 +234,28 @@ class Single extends Component {
     keyPush = (evt) =>{
         switch(evt.keyCode){
             case 37: //left arrow
-                if(this.state.xv !== 1)
-                    this.setState({xv:-1,yv:0})
+                if(this.xv !== 1){
+                    this.xv = -1;
+                    this.yv = 0;
+                }
                 break;
             case 38: //up arrow
-                if(this.state.yv !== 1)
-                    this.setState({xv:0,yv:-1})
+                if(this.yv !== 1){
+                    this.xv = 0;
+                    this.yv = -1;
+                }
                 break;
             case 39: //right arrow
-                if(this.state.xv !== -1)
-                    this.setState({xv:1,yv:0})
+                if(this.xv !== -1){
+                    this.xv = 1;
+                    this.yv = 0;
+                }
                 break;
             case 40: //down arrow
-                if(this.state.yv !== -1)
-                    this.setState({xv:0,yv:1})
+                if(this.state.yv !== -1){
+                    this.xv = 0;
+                    this.yv = 1;
+                }
                 break;
             default:
                 break;
