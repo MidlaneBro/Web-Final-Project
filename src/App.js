@@ -1,6 +1,6 @@
 import './App.css';
 import 'antd/dist/antd.css';
-import {switchToSingle, switchToRule, switchToLeaderboard, switchToAuthor, backToLobby} from './axios';
+import {switchToLeaderboard} from './axios';
 import {useEffect, useState} from 'react';
 import Lobby from './container/Lobby';
 import Single from './container/Single';
@@ -13,17 +13,15 @@ let client = new WebSocket('ws://localhost:4000');
 
 function App() {
   const [page, setpage] = useState("Lobby");
-  const [msg, setmsg] = useState("");
   //for multiple game
   const [uuid, setuuid] = useState("");
   const [status, setstatus] = useState("");
   const [game, setgame] = useState(null);
-  //---------------------------------------
+  //for leaderboard
+  const [msg, setmsg] = useState("");
 
   const onClickSingle = async () => {
-    let msg = await switchToSingle();
     setpage("Single");
-    setmsg(msg);
   }
 
   const onClickMultiple = () => {
@@ -40,9 +38,7 @@ function App() {
   }
 
   const onClickRule = async () => {
-    let msg = await switchToRule();
     setpage("Rule");
-    setmsg(msg);
   }
 
   const onClickLeaderboard = async () => {
@@ -52,15 +48,11 @@ function App() {
   }
 
   const onClickAuthor = async () => {
-    let msg = await switchToAuthor();
     setpage("Author");
-    setmsg(msg);
   }
 
   const onClickReturn = async () => {
-    let msg = await backToLobby();
     setpage("Lobby");
-    setmsg(msg);
   }
 
   useEffect(() => {

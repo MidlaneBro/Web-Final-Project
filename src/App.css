@@ -113,6 +113,14 @@
   color: darkseagreen;
 }
 
+.title {
+  font-size: 28px;
+}
+
+.title h1 {
+  margin: 0;
+}
+
 canvas {
   background-color: black;
   width: 1000px;
@@ -124,6 +132,59 @@ canvas {
   font-size: 32px;
   width: 50%;
   margin: auto;
+}
+
+.image-viewer__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-viewer__button {
+	display: inline;
+	background: none;
+	border: none;
+  border-radius: 50%;
+  margin: 30px;
+}
+
+.image-viewer__button img {
+	width: 80px;
+	height: 80px;
+	border: 1px solid transparent;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.image-viewer__button img:hover {
+	border: 1px solid black;
+	border-radius: 50%;
+}
+
+.image-viewer__button:focus {
+	outline: none;
+}
+
+.disabled {
+	opacity: 0.2;
+}
+
+.disabled:hover {
+	border-color: transparent !important;
+	cursor: not-allowed;
+}
+
+.rule {
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.rule h1 {
+ color: black;
+ background-color: white;
 }
 
 table {
@@ -149,10 +210,6 @@ tbody {
 
 .footer {
   margin: 10px;
-}
-
-.author-title {
-  font-size: 28px;
 }
 
 .author-body {

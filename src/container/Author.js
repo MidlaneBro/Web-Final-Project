@@ -7,7 +7,7 @@ function Author(props){
             <div className="head">
                 <button className="button3" onClick={props.onClickReturn}>Return</button>
             </div>
-            <div className="author-title">
+            <div className="title">
                 <h1>Developer</h1>
             </div>
             <div className="author-body">

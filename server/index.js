@@ -10,20 +10,14 @@ const WebSocket = require('ws')
 const Leaderboard = require('./models/leaderboard')
 
 const app = express()
-const homeRouter = require('./routes/home.js')
 const singleRouter = require('./routes/single.js')
 const multipleRouter = require('./routes/multiple.js')
-const ruleRouter = require('./routes/rule.js')
 const leaderboardRouter = require('./routes/leaderboard.js')
-const authorRouter = require('./routes/author.js')
 app.use(bodyParser.json())
 app.use(cors())
-app.use('/',homeRouter)
 app.use('/single_player',singleRouter);
 app.use('/multiple_player',multipleRouter);
-app.use('/rule',ruleRouter);
 app.use('/leaderboard',leaderboardRouter);
-app.use('/author',authorRouter);
 const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })
 
@@ -196,13 +190,13 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
                         snake1.score += 3;
                         break;
                     case 3: //speed-up
-                        other.speed += 1;
+                        other.speed *= 1.2;
                         clearInterval(gameid);
                         gameid = setInterval(()=>game(room,uuid1,uuid2,snake1,snake2,other,gameid),1000/other.speed);
                         snake1.score += 3;
                         break;
                     case 4: //speed-down
-                        other.speed = other.speed>1? other.speed-1 : other.speed;
+                        other.speed /= 1.2;
                         clearInterval(gameid);
                         gameid = setInterval(()=>game(room,uuid1,uuid2,snake1,snake2,other,gameid),1000/other.speed);
                         break;

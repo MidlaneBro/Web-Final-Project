@@ -131,7 +131,7 @@ class Single extends Component {
                         this.setState({score:this.state.score + 3});
                         break;
                     case 3: //speed-up
-                        this.speed += 1;
+                        this.speed *= 1.2;
                         clearInterval(this.id);
                         this.id = setInterval(this.game,1000/this.speed);
                         this.setState({
@@ -139,7 +139,7 @@ class Single extends Component {
                         });
                         break;
                     case 4: //speed-down
-                        this.speed = this.speed>1? this.speed-1 : this.speed;
+                        this.speed /= 1.2;
                         clearInterval(this.id);
                         this.id = setInterval(this.game,1000/this.speed);
                         break;
