@@ -17,7 +17,7 @@ function Lobby(props){
                 <button className="button2" onClick={props.onClickLeaderboard}>Leaderboard</button>
             </div>
             <div>
-                <button className="button2" onClick={props.onClickAuthor}>Author</button>
+                <button className="button2" onClick={props.onClickAuthor}>Developer</button>
             </div>
         </div>
     );

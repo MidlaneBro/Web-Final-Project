@@ -196,9 +196,15 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
                         snake1.score += 3;
                         break;
                     case 3: //speed-up
+                        other.speed += 1;
+                        clearInterval(gameid);
+                        gameid = setInterval(()=>game(room,uuid1,uuid2,snake1,snake2,other,gameid),1000/other.speed);
                         snake1.score += 3;
                         break;
                     case 4: //speed-down
+                        other.speed = other.speed>1? other.speed-1 : other.speed;
+                        clearInterval(gameid);
+                        gameid = setInterval(()=>game(room,uuid1,uuid2,snake1,snake2,other,gameid),1000/other.speed);
                         break;
                     case 5: //return
                         snake1.px = snake1.trail[0].x;
@@ -235,9 +241,15 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
                         snake2.score += 3;
                         break;
                     case 3: //speed-up
+                        other.speed += 1;
+                        clearInterval(gameid);
+                        gameid = setInterval(()=>game(room,uuid1,uuid2,snake1,snake2,other,gameid),1000/other.speed);
                         snake2.score += 3;
                         break;
                     case 4: //speed-down
+                        other.speed = other.speed>1? other.speed-1 : other.speed;
+                        clearInterval(gameid);
+                        gameid = setInterval(()=>game(room,uuid1,uuid2,snake1,snake2,other,gameid),1000/other.speed);
                         break;
                     case 5: //return
                         snake2.px = snake2.trail[0].x;
@@ -389,7 +401,8 @@ db.once('open', () => {
                                 ],
                                 count: 0,
                                 tool: [],
-                                gray: []
+                                gray: [],
+                                speed: 10
                             }
                             rooms[room]['gameid'] = setInterval(()=>game(room,users[0].uuid,users[1].uuid,rooms[room]['snake1'],rooms[room]['snake2'],rooms[room]['other'],rooms[room]['gameid']),1000/10);
                             console.log(`Start game with gameid:${rooms[room]['gameid']}`);

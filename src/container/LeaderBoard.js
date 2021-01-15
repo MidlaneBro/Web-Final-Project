@@ -29,14 +29,16 @@ function LeaderBoard(props){
                         )}
                     </tbody>
                 </table>
-                <br></br>
             </div>
-            <div>
+            <div className="footer">
                 <Button type="primary" size="large" onClick={()=>setmode('all')}>All</Button>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <Button type="primary" size="large" onClick={()=>setmode('multiple')}>Single</Button>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <Button type="primary" size="large" onClick={()=>setmode('single')}>Multiple</Button>
+                <br></br>
+                <br></br>
+                <br></br>
             </div>
         </div>
     );
