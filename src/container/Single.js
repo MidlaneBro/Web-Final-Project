@@ -236,25 +236,25 @@ class Single extends Component {
     keyPush = (evt) =>{
         switch(evt.keyCode){
             case 37: //left arrow
-                if(this.xv !== 1){
+                if(this.trail.length===1 || (this.trail[this.trail.length-1].x - this.trail[this.trail.length-2].x !== 1)){
                     this.xv = -1;
                     this.yv = 0;
                 }
                 break;
             case 38: //up arrow
-                if(this.yv !== 1){
+                if(this.trail.length===1 || (this.trail[this.trail.length-1].y - this.trail[this.trail.length-2].y !== 1)){
                     this.xv = 0;
                     this.yv = -1;
                 }
                 break;
             case 39: //right arrow
-                if(this.xv !== -1){
+                if(this.trail.length===1 || (this.trail[this.trail.length-1].x - this.trail[this.trail.length-2].x !== -1)){
                     this.xv = 1;
                     this.yv = 0;
                 }
                 break;
             case 40: //down arrow
-                if(this.state.yv !== -1){
+                if(this.trail.length===1 || (this.trail[this.trail.length-1].y - this.trail[this.trail.length-2].y !== -1)){
                     this.xv = 0;
                     this.yv = 1;
                 }

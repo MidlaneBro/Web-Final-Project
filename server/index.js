@@ -89,27 +89,27 @@ const game = (room, uuid1, uuid2, snake1, snake2, other) => {
     if((snake2.px < 0 || snake2.px > other.tcx-1 || snake2.py < 0 || snake2.py > other.tcy-1) && snake2.alive){
         endgame(room,uuid2,'snake2');
     }
-    //snake1 death
+    //hit snake1
     for(let i=0;i<snake1.trail.length;i++){
-        if(snake1.trail[i].x === snake1.px && snake1.trail[i].y === snake1.py){
+        if(snake1.trail[i].x === snake1.px && snake1.trail[i].y === snake1.py && snake1.alive){
             if(snake1.xv !== 0 || snake1.yv !== 0){
                 endgame(room,uuid1,'snake1');
             }
         }
-        if(snake1.trail[i].x === snake2.px && snake1.trail[i].y === snake2.py){
+        if(snake1.trail[i].x === snake2.px && snake1.trail[i].y === snake2.py && snake2.alive){
             if(snake2.xv !==0 || snake2.yv !== 0){
                 endgame(room,uuid2,'snake2');
             }
         }
     }
-    //snake2 death
+    //hit snake2
     for(let i=0;i<snake2.trail.length;i++){
-        if(snake2.trail[i].x === snake2.px && snake2.trail[i].y === snake2.py){
+        if(snake2.trail[i].x === snake2.px && snake2.trail[i].y === snake2.py && snake2.alive){
             if(snake2.xv !==0 || snake2.yv !==0){
                 endgame(room,uuid2,'snake2');
             }
         }
-        if(snake2.trail[i].x === snake1.px && snake2.trail[i].y === snake1.py){
+        if(snake2.trail[i].x === snake1.px && snake2.trail[i].y === snake1.py && snake1.alive){
             if(snake1.xv !==0 || snake1.yv !== 0){
                 endgame(room,uuid1,'snake1');
             }
@@ -117,10 +117,10 @@ const game = (room, uuid1, uuid2, snake1, snake2, other) => {
     }
     //snake hit gray
     for(let i=0;i<other.gray.length;i++){
-        if(snake2.px === other.gray[i].x && snake2.py === other.gray[i].y)
-            endgame(room,uuid2,'snake2');
-        if(snake1.px === other.gray[i].x && snake1.py === other.gray[i].y)
+        if(snake1.px === other.gray[i].x && snake1.py === other.gray[i].y && snake1.alive)
             endgame(room,uuid1,'snake1');
+        if(snake2.px === other.gray[i].x && snake2.py === other.gray[i].y && snake2.alive)
+            endgame(room,uuid2,'snake2');
     }
     if(!snake1.alive && !snake2.alive){
         clearInterval(rooms[room]['gameid']);
@@ -237,14 +237,14 @@ const game = (room, uuid1, uuid2, snake1, snake2, other) => {
                         snake2.score += 3;
                         break;
                     /*case 3: //speed-up
-                        other.speed += 1;
+                        other.speed *= 1.2;
                         console.log(`reset interal of game with gameid:${rooms[room]['gameid']}`);
                         clearInterval(rooms[room]['gameid']);
                         rooms[room]['gameid'] = setInterval(()=>game(rooms[room],rooms[room][uuid1],rooms[room][uuid2],rooms[room]['snake1'],rooms[room]['snake2'],rooms[room]['other']),1000/other.speed);
                         snake2.score += 3;
                         break;
                     case 4: //speed-down
-                        other.speed = other.speed>1? other.speed-1 : other.speed;
+                        other.speed /= 1.2;
                         console.log(`reset interal of game with gameid:${rooms[room]['gameid']}`);
                         clearInterval(rooms[room]['gameid']);
                         rooms[room]['gameid'] = setInterval(()=>game(rooms[room],rooms[room][uuid1],rooms[room][uuid2],rooms[room]['snake1'],rooms[room]['snake2'],rooms[room]['other']),1000/other.speed);
@@ -429,27 +429,28 @@ db.once('open', () => {
                     for(user in rooms[room]){
                         if(user===uuid && ('gameid' in rooms[room])){
                             if(rooms[room]['snake1'].uuid===uuid && rooms[room]['snake1'].alive){
+                                let t = rooms[room]['snake1'].trail;
                                 switch (JSON.parse(data)[1]) {
                                     case 37: //left arrow
-                                        if(rooms[room]['snake1'].xv !== 1){
+                                        if(t.length===1 || t[t.length-1].x-t[t.length-2].x!==1){
                                             rooms[room]['snake1'].xv = -1;
                                             rooms[room]['snake1'].yv = 0;
                                         }
                                         break;
                                     case 38: //up arrow
-                                        if(rooms[room]['snake1'].yv !== 1){
+                                        if(t.length===1 || t[t.length-1].y-t[t.length-2].y!==1){
                                             rooms[room]['snake1'].xv = 0;
                                             rooms[room]['snake1'].yv = -1;
                                         }
                                         break;
                                     case 39: //right arrow
-                                        if(rooms[room]['snake1'].xv !== -1){
+                                        if(t.length===1 || t[t.length-1].x-t[t.length-2].x!==-1){
                                             rooms[room]['snake1'].xv = 1;
                                             rooms[room]['snake1'].yv = 0;
                                         }
                                         break;
                                     case 40: //down arrow
-                                        if(rooms[room]['snake1'].yv !== -1){
+                                        if(t.length===1 || t[t.length-1].y-t[t.length-2].y!==-1){
                                             rooms[room]['snake1'].xv = 0;
                                             rooms[room]['snake1'].yv = 1;
                                         }
@@ -459,27 +460,28 @@ db.once('open', () => {
                                 }
                             }
                             if(rooms[room]['snake2'].uuid===uuid && rooms[room]['snake2'].alive){
+                                let t = rooms[room]['snake2'].trail;
                                 switch (JSON.parse(data)[1]) {
                                     case 37: //left arrow
-                                        if(rooms[room]['snake2'].xv !== 1){
+                                        if(t.length===1 || t[t.length-1].x-t[t.length-2].x!==1){
                                             rooms[room]['snake2'].xv = -1;
                                             rooms[room]['snake2'].yv = 0;
                                         }
                                         break;
                                     case 38: //up arrow
-                                        if(rooms[room]['snake2'].yv !== 1){
+                                        if(t.length===1 || t[t.length-1].y-t[t.length-2].y!==1){
                                             rooms[room]['snake2'].xv = 0;
                                             rooms[room]['snake2'].yv = -1;
                                         }
                                         break;
                                     case 39: //right arrow
-                                        if(rooms[room]['snake2'].xv !== -1){
+                                        if(t.length===1 || t[t.length-1].x-t[t.length-2].x!==-1){
                                             rooms[room]['snake2'].xv = 1;
                                             rooms[room]['snake2'].yv = 0;
                                         }
                                         break;
                                     case 40: //down arrow
-                                        if(rooms[room]['snake2'].yv !== -1){
+                                        if(t.length===1 || t[t.length-1].y-t[t.length-2].y!==-1){
                                             rooms[room]['snake2'].xv = 0;
                                             rooms[room]['snake2'].yv = 1;
                                         }
