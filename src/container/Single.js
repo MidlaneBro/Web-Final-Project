@@ -32,6 +32,9 @@ class Single extends Component {
                 return true;
             }
         }
+        if(x===this.px+this.xv && y===this.py+this.yv){
+            return true;
+        }
         for(let i=0;i<this.apple.length;i++){
             if(x===this.apple[i].x && y===this.apple[i].y){
                 return true;

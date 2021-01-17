@@ -60,6 +60,9 @@ function occupied(x, y, snake1, snake2, other) {
             return true;
         }
     }
+    if((x===snake1.px+snake1.xv && y===snake1.py+snake1.yv) || (x===snake2.px+snake2.xv && y===snake2.py+snake2.yv)){
+        return true;
+    }
     for(let i=0;i<other.apple.length;i++){
         if(x===other.apple[i].x && y===other.apple[i].y){
             return true;
