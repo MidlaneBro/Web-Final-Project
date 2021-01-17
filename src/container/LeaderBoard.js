@@ -14,14 +14,16 @@ function LeaderBoard(props){
                 <table>
                     <thead>
                         <tr>
+                            <th>Rank</th>
                             <th>Name</th>
                             <th>Mode</th>
                             <th>Score</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {props.data.filter(e=>e.mode!==mode).map(e=>
+                        {props.data.filter(e=>e.mode!==mode).map((e,index)=>
                             <tr>
+                                <td>{index+1}</td>
                                 <td>{e.name}</td>
                                 <td>{e.mode}</td>
                                 <td>{e.score}</td>

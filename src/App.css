@@ -125,7 +125,7 @@ canvas {
   background-color: black;
   width: 1000px;
   height: 500px;
-  border: 5px outset red;
+  border: 10px outset red;
 }
 
 .leaderboard {

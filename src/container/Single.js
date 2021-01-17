@@ -206,10 +206,12 @@ class Single extends Component {
     }
 
     endgame(){
-        let name = window.prompt("Type your name to record your score on the leaderboard");
-        if(name){
-            let msg = sendsinglescore(name,this.state.score);
-            console.log(msg);
+        if(this.props.data.length<10 || this.state.score>this.props.data[9].score){
+            let name = window.prompt("Congratulation, you are ranked Top 10. Type your name to save record on leaderboard!");
+            if(name){
+                let msg = sendsinglescore(name,this.state.score);
+                console.log(msg);
+            }
         }
         this.px = 25; //position-x
         this.py = 12; //position-y

@@ -1,6 +1,6 @@
 import './App.css';
 import 'antd/dist/antd.css';
-import {switchToLeaderboard} from './axios';
+import {switchToLeaderboard, switchToMultiple, switchToSingle} from './axios';
 import {useEffect, useState} from 'react';
 import Lobby from './container/Lobby';
 import Single from './container/Single';
@@ -21,10 +21,14 @@ function App() {
   const [msg, setmsg] = useState("");
 
   const onClickSingle = async () => {
+    let msg = await switchToSingle();
+    setmsg(msg);
     setpage("Single");
   }
 
-  const onClickMultiple = () => {
+  const onClickMultiple = async () => {
+    let msg = await switchToMultiple();
+    setmsg(msg);
     client.send(JSON.stringify(['','join']));
     setpage("Multiple");
   }
@@ -37,7 +41,7 @@ function App() {
     setpage('Lobby');
   }
 
-  const onClickRule = async () => {
+  const onClickRule = () => {
     setpage("Rule");
   }
 
@@ -47,11 +51,11 @@ function App() {
     setpage("Leaderboard");
   }
 
-  const onClickAuthor = async () => {
+  const onClickAuthor = () => {
     setpage("Author");
   }
 
-  const onClickReturn = async () => {
+  const onClickReturn = () => {
     setpage("Lobby");
   }
 
@@ -81,7 +85,7 @@ function App() {
   if(page==="Single"){
     return (
       <div className="App">
-        <Single onClickReturn={onClickReturn}></Single>
+        <Single onClickReturn={onClickReturn} data={msg}></Single>
       </div>
     );
   }
@@ -89,7 +93,7 @@ function App() {
   if(page==="Multiple"){
     return (
       <div className="App">
-        <Multiple client={client} uuid={uuid} status={status} game={game} onClickReturn={returnFromMultiple}></Multiple>
+        <Multiple client={client} uuid={uuid} status={status} game={game} data={msg} onClickReturn={returnFromMultiple}></Multiple>
       </div>
     )
   }

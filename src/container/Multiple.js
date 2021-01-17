@@ -39,13 +39,13 @@ class Multiple extends Component {
                     case 2: //molt
                         ctx.fillStyle = "purple";
                         break;
-                    case 3: //speed-up
+                    /*case 3: //speed-up
                         ctx.fillStyle = "aqua";
                         break;
                     case 4: //speed-down
                         ctx.fillStyle = "white";
-                        break; 
-                    case 5: //return
+                        break; */
+                    case 3: //return
                         ctx.fillStyle = "blue";
                         break;
                     default:
@@ -60,10 +60,12 @@ class Multiple extends Component {
             this.setState({score:this.props.game.snake1.score,score_r:this.props.game.snake2.score});
         }
         if(prevProps.status!==this.props.status && this.props.status==='end'){
-            let name = window.prompt("Type your name to record your score on the leaderboard");
-            if(name){
-                let msg = sendmultiplescore(name,this.state.score);
-                console.log(msg);
+            if(this.props.data.length<10 || this.state.score>this.props.data[9].score){
+                let name = window.prompt("Congratulation, you are ranked Top 10. Type your name to save record on leaderboard!");
+                if(name){
+                    let msg = sendmultiplescore(name,this.state.score);
+                    console.log(msg);
+                }
             }
         }
     }

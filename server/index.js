@@ -78,7 +78,7 @@ function occupied(x, y, snake1, snake2, other) {
     return false;
 }
 
-const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
+const game = (room, uuid1, uuid2, snake1, snake2, other) => {
     snake1.px = snake1.px + snake1.xv;
     snake1.py = snake1.py + snake1.yv;
     snake2.px = snake2.px + snake2.xv;
@@ -123,7 +123,7 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
             endgame(room,uuid1,'snake1');
     }
     if(!snake1.alive && !snake2.alive){
-        clearInterval(gameid);
+        clearInterval(rooms[room]['gameid']);
     }
     snake1.trail = [...snake1.trail, { x:snake1.px, y:snake1.py }];
     snake2.trail = [...snake2.trail, { x:snake2.px, y:snake2.py }];
@@ -160,7 +160,7 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
                     tool_x = Math.floor(Math.random()*other.tcx);
                     tool_y = Math.floor(Math.random()*other.tcy);
                 }
-                other.tool = [...other.tool, {type:Math.floor(Math.random()*6),x:tool_x,y:tool_y}];
+                other.tool = [...other.tool, {type:Math.floor(Math.random()*4),x:tool_x,y:tool_y}];
             }
             let gray_x = Math.floor(Math.random()*other.tcx);
             let gray_y = Math.floor(Math.random()*other.tcy);
@@ -189,18 +189,20 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
                         snake1.tail = 1;
                         snake1.score += 3;
                         break;
-                    case 3: //speed-up
+                    /*case 3: //speed-up
                         other.speed *= 1.2;
-                        clearInterval(gameid);
-                        gameid = setInterval(()=>game(room,uuid1,uuid2,snake1,snake2,other,gameid),1000/other.speed);
+                        console.log(`reset interal of game with gameid:${rooms[room]['gameid']}`);
+                        clearInterval(rooms[room]['gameid']);
+                        rooms[room]['gameid'] = setInterval(()=>game(rooms[room],rooms[room][uuid1],rooms[room][uuid2],rooms[room]['snake1'],rooms[room]['snake2'],rooms[room]['other']),1000/other.speed);
                         snake1.score += 3;
                         break;
                     case 4: //speed-down
                         other.speed /= 1.2;
-                        clearInterval(gameid);
-                        gameid = setInterval(()=>game(room,uuid1,uuid2,snake1,snake2,other,gameid),1000/other.speed);
-                        break;
-                    case 5: //return
+                        console.log(`reset interal of game with gameid:${rooms[room]['gameid']}`);
+                        clearInterval(rooms[room]['gameid']);
+                        rooms[room]['gameid'] = setInterval(()=>game(rooms[room],rooms[room][uuid1],rooms[room][uuid2],rooms[room]['snake1'],rooms[room]['snake2'],rooms[room]['other']),1000/other.speed);
+                        break;*/
+                    case 3: //return
                         snake1.px = snake1.trail[0].x;
                         snake1.py = snake1.trail[0].y;
                         if(snake1.trail.length===1){
@@ -234,18 +236,20 @@ const game = (room, uuid1, uuid2, snake1, snake2, other, gameid) => {
                         snake2.tail = 1;
                         snake2.score += 3;
                         break;
-                    case 3: //speed-up
+                    /*case 3: //speed-up
                         other.speed += 1;
-                        clearInterval(gameid);
-                        gameid = setInterval(()=>game(room,uuid1,uuid2,snake1,snake2,other,gameid),1000/other.speed);
+                        console.log(`reset interal of game with gameid:${rooms[room]['gameid']}`);
+                        clearInterval(rooms[room]['gameid']);
+                        rooms[room]['gameid'] = setInterval(()=>game(rooms[room],rooms[room][uuid1],rooms[room][uuid2],rooms[room]['snake1'],rooms[room]['snake2'],rooms[room]['other']),1000/other.speed);
                         snake2.score += 3;
                         break;
                     case 4: //speed-down
                         other.speed = other.speed>1? other.speed-1 : other.speed;
-                        clearInterval(gameid);
-                        gameid = setInterval(()=>game(room,uuid1,uuid2,snake1,snake2,other,gameid),1000/other.speed);
-                        break;
-                    case 5: //return
+                        console.log(`reset interal of game with gameid:${rooms[room]['gameid']}`);
+                        clearInterval(rooms[room]['gameid']);
+                        rooms[room]['gameid'] = setInterval(()=>game(rooms[room],rooms[room][uuid1],rooms[room][uuid2],rooms[room]['snake1'],rooms[room]['snake2'],rooms[room]['other']),1000/other.speed);
+                        break;*/
+                    case 3: //return
                         snake2.px = snake2.trail[0].x;
                         snake2.py = snake2.trail[0].y;
                         if(snake2.trail.length===1){
@@ -398,7 +402,7 @@ db.once('open', () => {
                                 gray: [],
                                 speed: 10
                             }
-                            rooms[room]['gameid'] = setInterval(()=>game(room,users[0].uuid,users[1].uuid,rooms[room]['snake1'],rooms[room]['snake2'],rooms[room]['other'],rooms[room]['gameid']),1000/10);
+                            rooms[room]['gameid'] = setInterval(()=>game(room,users[0].uuid,users[1].uuid,rooms[room]['snake1'],rooms[room]['snake2'],rooms[room]['other']),1000/10);
                             console.log(`Start game with gameid:${rooms[room]['gameid']}`);
                             flag = true;
                             break;
@@ -412,13 +416,11 @@ db.once('open', () => {
                         ws.send(JSON.stringify([uuid,'wait']));
                     }
                 }
-                console.log(rooms);
             }
 
             if(JSON.parse(data)[1]==="leave"){
                 console.log(`Remove client with uuid:${uuid}`);
                 leave(uuid);
-                console.log(rooms);
             }
 
             if(JSON.parse(data)[1]===37||JSON.parse(data)[1]===38||JSON.parse(data)[1]===39||JSON.parse(data)[1]===40){
