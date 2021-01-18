@@ -1,7 +1,6 @@
 require('dotenv-defaults').config()
 
 const express = require("express")
-const router = express.Router()
 const bodyParser = require("body-parser")
 const cors = require('cors')
 const http = require("http")
@@ -21,12 +20,12 @@ app.use(cors())
 app.use('/single_player',singleRouter);
 app.use('/multiple_player',multipleRouter);
 app.use('/leaderboard',leaderboardRouter);
-router.get('/', function (req, res) {
+app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 const server = http.createServer(app)
-const wss = new WebSocket.Server({ server })
+const wss = new WebSocket.Server({ server:server })
 
 if (!process.env.MONGO_URL) {
   console.error('Missing MONGO_URL!!!')
@@ -516,7 +515,7 @@ db.once('open', () => {
       })
   })
 
-  const PORT = process.env.port || 4000
+  const PORT = process.env.port || 3000
   server.listen(PORT, () => {
     console.log(`Listening on http://localhost:${PORT}`)
   })

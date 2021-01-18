@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const instance = axios.create({ baseURL: 'http://localhost:4000' });
+const instance = axios.create({ baseURL: '/' });
 
 const switchToSingle = async () => {
     const {data} = await instance.get('/single_player');

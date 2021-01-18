@@ -9,7 +9,7 @@ import Rule from './container/Rule';
 import LeaderBoard from './container/LeaderBoard';
 import Author from './container/Author';
 
-let client = new WebSocket('ws://localhost:4000');
+let client = new WebSocket('ws://localhost:3000');
 
 function App() {
   const [page, setpage] = useState("Lobby");
