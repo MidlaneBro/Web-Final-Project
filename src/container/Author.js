@@ -29,7 +29,7 @@ function Author(props){
                         <img src={developer2} width="300" height="370" alt="陳逼舟"/>
                     </div>
                     <div>
-                        <h1>陳逼舟</h1>
+                        <h1>陳奕舟</h1>
                         <h1>台大工海四 B06505006</h1>
                         <p>單人模式主程式、協助後端開發</p>
                         <p>單人模式改良、協助網頁設計</p>

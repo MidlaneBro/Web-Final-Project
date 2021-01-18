@@ -243,22 +243,21 @@ function Rule(props){
         return ()=>clearInterval(id);
     },[index])
 
-    const keyPush = evt => {
-        switch (evt.keyCode) {
-            case 37:
-                setindex(index===0? 0:index-1);
-                break;
-            case 39:
-                setindex(index===10? 10:index+1);
-                break;
-            default:
-                break;
-        }
-    }
-
     useEffect(()=>{
-        document.addEventListener("keydown",e=>keyPush(e));
-        return document.removeEventListener("keydown",e=>keyPush(e));
+        const keyPush = evt => {
+            switch (evt.keyCode) {
+                case 37:
+                    setindex(index===0? 0:index-1);
+                    break;
+                case 39:
+                    setindex(index===10? 10:index+1);
+                    break;
+                default:
+                    break;
+            }
+        }
+        document.addEventListener("keydown",keyPush);
+        return ()=>document.removeEventListener("keydown",keyPush);
     })
 
     return(
@@ -298,11 +297,11 @@ function Rule(props){
                 </div>: index===6?
                 <div>
                     <canvas ref={canvasRef} width={1000} height={500}></canvas>
-                    <h1>Aqua tool tile(Speed-up): score+3, length+0, speed*1.2.(Single only)</h1>
+                    <h1>Aqua tool tile(Speed-up): score+3, length+0, speed*1.2.(Single mode only)</h1>
                 </div>: index===7?
                 <div>
                     <canvas ref={canvasRef} width={1000} height={500}></canvas>
-                    <h1>White tool tile(Speed-down): score+0, length+0, speed/1.2.(Single only)</h1>
+                    <h1>White tool tile(Speed-down): score+0, length+0, speed/1.2.(Single mode only)</h1>
                 </div>: index===8?
                 <div>
                     <canvas ref={canvasRef} width={1000} height={500}></canvas>
@@ -314,10 +313,13 @@ function Rule(props){
                 </div>:
                 <div className="rule">
                     <h1>For multiple player mode:</h1>
-                    <h1>1.You will be paired with another player automatically.</h1>
+                    <h1>1.The system will create room and match you with an opponent.</h1>
                     <h1>2.Game over when you bump into another snake's body</h1>
                     <h1>3.Both player die when the snakes' head bump into each other.</h1>
                     <h1>4.The dead snake will become obstacles.</h1>
+                    <h1>For leaderboard:</h1>
+                    <h1>When you are ranked Top 10 of either single mode or multiple mode,</h1>
+                    <h1>you can record your score on the leaderboard.</h1>
                 </div>}
                 <button className="image-viewer__button" onClick={()=>setindex(index===10? 10:index+1)}><img src={next} id="next" alt="next" className={index===10? "disabled":""}/></button>
             </div>
