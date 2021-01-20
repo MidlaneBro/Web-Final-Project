@@ -9,8 +9,8 @@ import Rule from './container/Rule';
 import LeaderBoard from './container/LeaderBoard';
 import Author from './container/Author';
 
-const port = process.env.PORT || 3000
-let client = new WebSocket(`ws://localhost:${port}`);
+let HOST = window.location.href.replace(/^http/,'ws')
+let client = new WebSocket(HOST);
 
 function App() {
   const [page, setpage] = useState("Lobby");
