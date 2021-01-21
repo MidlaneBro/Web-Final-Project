@@ -281,10 +281,10 @@ const game = (room, uuid1, uuid2, snake1, snake2, other) => {
   }
   other.tool = other.tool.filter(e=>e!==null);
   if(uuid1 in rooms[room]){
-      rooms[room][uuid1].send(JSON.stringify(["",{snake1:snake1,snake2:snake2,other:other}]));
+      rooms[room][uuid1].send(JSON.stringify(["",{snake1:{trail:snake1.trail,score:snake1.score},snake2:{trail:snake2.trail,score:snake2.score},other:other}]));
   }
   if(uuid2 in rooms[room]){
-      rooms[room][uuid2].send(JSON.stringify(["",{snake1:snake2,snake2:snake1,other:other}]));
+      rooms[room][uuid2].send(JSON.stringify(["",{snake1:{trail:snake2.trail,score:snake2.score},snake2:{trail:snake1.trail,score:snake1.score},other:other}]));
   }
 }
 
