@@ -1,28 +1,63 @@
-# Snake Game
+# Web Programming Final
 
-This was the final project of NTUEE-Web course.
+(Group 108) 多人對戰貪食蛇遊戲
 
-Have fun and enjoy it~~~
+Group Member：
 
-## Prerequisite
+台大電機四 B60901017 鐘民憲
 
-1. Install npm.
+台大工海四 B06505006 陳奕舟
 
-2. `npm install yarn --g`
+Deployed連結：https://reurl.cc/WEElvx
 
-## Usage
+Demo影片連結：https://youtu.be/wdedFFmPiiE
 
-### `yarn server`
+Github連結：https://github.com/MidlaneBro/Web-Final-Project
 
-Start up the server on [http://localhost:4000] and 192.168.x.x:4000
+## 介紹
 
-### `yarn start`
+顧名思義，就是可以自動跟別人配對並且即時對戰的貪食蛇遊戲，相信大家小時候都有稍稍玩過貪食蛇這個骨灰級遊戲，但大家玩的應該都是單機版，沒有想過貪食蛇這樣簡單的遊戲也可以做成多人遊戲吧！
 
-Runs the app on [http://localhost:3000] and 192.168.x.x:3000
+既然是線上遊戲，那麼只有傳統玩法當然是不夠的，在遊戲中我們添加了許多有趣的機制與道具，並且仍然維持操作的單純，使無論是熟悉玩遊戲或不熟悉玩遊戲的人都能享受到一定的樂趣。
 
-You can yarn start multiple localhost in your network and all connect to the server ip, then you will be able to enjoy multiple player mode.
-(Remember to change the ip address in src/App.js and src/axios.js)
+多人模式為兩兩配對，系統會自動幫你找到在線上的對手。
 
-## Note
+既然是競技遊戲，那麼當然有記分板系統，單人模式與多人模式分開排名，只要分數達到前十名便可以留下自己的大名，向大家證明自己的實力。
 
-snake.exe was our inspiration, it was not written by us.
+無須登入，隨連隨玩，無論你是想要懷舊的人，想要一個可以在短時間內結束的遊戲，想要跟別人切磋的人，還是單純熱愛遊戲的人，都歡迎來遊玩，想辦法超越排行榜上的對手吧！
+
+## 使用/操作方式
+
+使用方向鍵即可控制蛇的移動，其餘在規則頁面及影片中皆有詳細演示，在此不多贅述。
+
+## 其他說明
+
+為了確保遊戲畫面的同步與低延遲，我們把遊戲放在台灣的GCP compute engine上運行，但我們沒有測試過伺服器最多可以支援多少人同時連線對戰，所以歡迎大家多多遊玩多人模式，一方面是這樣才匹配得到對手，另一方面也想確認自己寫的程式是否足夠robust。
+
+如果點進連結發現伺服器掛了，麻煩協助在此篇貼文底下留言回報，我們會盡快修復，感謝。
+
+## 使用之套件、框架、程式碼
+
+Frontend : react.js
+
+Backend : node.js
+
+Database : mongodb
+
+Other : websocket, express, axios, babel, antd
+
+## 專題製作心得
+
+鐘民憲：這個遊戲的靈感來源於我高中的時候在學校教學檔案資源中找到的一個snake.exe(有放在github repo中)，在那時我們連皮卡丘打排球都覺得很好玩，所以snake.exe也曾在我們班流行過一陣子，可惜的是它只能在同一台電腦上多人玩而沒辦法方便的連線遊玩，如今學過web之後終於有能力可以真的把它變成網頁遊戲了，也算是實現當年小小的夢想吧，而且自己成功架出一個簡單的遊戲伺服器，也相當有成就感。在實作上，雖然貪食蛇遊戲本身不難，但在後端要如何建立自動配對系統，並且確保遊戲的即時性與玩家畫面同步，還要考慮玩家中離的情況，費了不少功夫。此外還有遊戲機制與道具的設計，如何增進玩家操作流暢性，甚至讓畫面整體舒服美觀，在在都讓我體驗到做網路服務是需要不斷精進優化的。真的很感謝web這堂課讓我以final為名去實做了一個遊戲。
+
+陳奕舟：這次期末專題整合了一整個學期在課堂上學到的知識，從前後端的設計與溝通,資料庫一直到Deployment。透過實際的接觸及思考，我才終於對一個完整的網路應用有了較深入的理解。能夠把課堂上所學到的東西透過小組成員間的創意去做呈現，去創造出一個小小的網路應用，算是個難得的體驗，我透過這樣的練習學到了許多，將來或許也能把這樣的經驗運用在一些其他的project上。
+
+## 分工
+
+鐘民憲：題目發想、規則設計、整體網頁設計、單人模式改良、多人模式前後端、記分板前後端、製作規則及開發者頁面、伺服器部屬與後續維護、影片拍攝、臉書貼文、撰寫報告
+
+陳奕舟：單人模式主程式、研究websocket用法、單人模式改良、協助網頁設計、研究deploy方法
+
+## 靈感來源
+
+Repo中的snake.exe為我們的靈感來源，不過整個程式都還是我們自己寫的，我們只是參考它的玩法而已，在規則上也有做出改變。
