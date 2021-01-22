@@ -61,3 +61,15 @@ Other : websocket, express, axios, babel, antd
 ## 靈感來源
 
 Repo中的snake.exe為我們的靈感來源，不過整個程式都還是我們自己寫的，我們只是參考它的玩法而已，在規則上也有做出改變。
+
+## Code使用方法
+
+`yarn`
+
+`yarn server`
+
+`yarn start`
+
+## 2021/1/22更新
+
+Smartphone available now!!!
