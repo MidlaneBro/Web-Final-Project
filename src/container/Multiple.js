@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import loading from "../img/loading.gif";
 import {sendmultiplescore} from '../axios';
+import {Button} from 'antd';
 
 class Multiple extends Component {
     constructor(props){
@@ -89,6 +90,15 @@ class Multiple extends Component {
                 </div>
                 <div>
                     {this.props.status==="wait"? <h1>Waiting for another player...</h1>:<h1>Your Score:{this.state.score}&nbsp;&nbsp;&nbsp;&nbsp;Opponent's Score:{this.state.score_r}</h1>}
+                </div>
+                <div className="control">
+                    <Button type="primary" shape="round" onClick={()=>this.keyPush({keyCode:37})}>&#8592;</Button>
+                    <Button type="primary" shape="round" onClick={()=>this.keyPush({keyCode:39})}>&#8594;</Button>
+                </div>
+                <div className="control2">
+                <Button type="primary" shape="round" onClick={()=>this.keyPush({keyCode:38})}>&#8593;</Button>
+                <br></br>
+                <Button type="primary" shape="round" onClick={()=>this.keyPush({keyCode:40})}>&#8595;</Button>
                 </div>
             </div>
         );

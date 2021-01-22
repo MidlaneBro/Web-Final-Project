@@ -8,13 +8,12 @@
 
 .Logo {
   margin: 10px;
-  width: 400px;
+  width: 330px;
 }
 
 .button1 {
-  width: 200px;
-  height: 150px;
-  padding: 25px 50px;
+  width: 165px;
+  height: 140px;
   margin: 5px;
   border: 1px solid #000000;
   background: -webkit-linear-gradient(top, #F7D660, #B37D00);
@@ -22,7 +21,7 @@
   box-shadow: 0px 7px 2px -5px #1A1A1A, inset 0px 0px 0px #FFFFFF;
   border-radius: 25px;
   color: #00328F;
-  font-size: 25px;
+  font-size: 24px;
   font-weight: bold;
   transition: 0.3s;
   cursor: pointer;
@@ -46,7 +45,7 @@
 }
 
 .button2 {
-  width: 400px;
+  width: 330px;
   height: 60px;
   padding: 0px 50px;
   margin: 5px;
@@ -84,9 +83,8 @@
 }
 
 .button3 {
-  width: 200px;
-  height: 50px;
-  padding: 0px 50px;
+  width: 8em;
+  height: 2em;
   margin: 10px;
   border: 1px solid #000000;
   background: -webkit-linear-gradient(left, #ffffff, #b3b3b3);
@@ -114,7 +112,7 @@
 }
 
 .title {
-  font-size: 28px;
+  font-size: 24px;
 }
 
 .title h1 {
@@ -123,8 +121,8 @@
 
 canvas {
   background-color: black;
-  width: 1000px;
-  height: 500px;
+  width: 67vw;
+  height: 33.5vw;
   border: 10px outset red;
 }
 
@@ -145,7 +143,7 @@ canvas {
 	background: none;
 	border: none;
   border-radius: 50%;
-  margin: 30px;
+  margin: 15px;
 }
 
 .image-viewer__button img {
@@ -175,7 +173,7 @@ canvas {
 }
 
 .rule {
-  height: 500px;
+  height: 70vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -185,6 +183,7 @@ canvas {
 .rule h1 {
  color: black;
  background-color: white;
+ font-size: 3vh;
 }
 
 table {
@@ -244,4 +243,28 @@ tbody {
 
 .author-right p {
   font-size: large;
+}
+
+.control {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+.control button {
+  width: 60px;
+  height: 60px;
+  margin: 10px;
+}
+
+.control2 {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+.control2 button {
+  width: 60px;
+  height: 60px;
+  margin: 10px;
 }

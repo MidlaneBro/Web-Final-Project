@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {sendsinglescore} from '../axios';
+import {Button} from 'antd';
 
 class Single extends Component {
     constructor(props){
@@ -287,6 +288,15 @@ class Single extends Component {
                 </div>
                 <div>
                     <h1>Score:{this.state.score}</h1>
+                </div>
+                <div className="control">
+                    <Button type="primary" shape="round" onClick={()=>this.keyPush({keyCode:37})}>&#8592;</Button>
+                    <Button type="primary" shape="round" onClick={()=>this.keyPush({keyCode:39})}>&#8594;</Button>
+                </div>
+                <div className="control2">
+                    <Button type="primary" shape="round" onClick={()=>this.keyPush({keyCode:38})}>&#8593;</Button>
+                    <br></br>
+                    <Button type="primary" shape="round" onClick={()=>this.keyPush({keyCode:40})}>&#8595;</Button>
                 </div>
             </div>
         );

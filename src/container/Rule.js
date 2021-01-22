@@ -272,7 +272,7 @@ function Rule(props){
                 <button className="image-viewer__button" onClick={()=>setindex(index===0? 0:index-1)}><img src={back} id="prev" alt="back" className={index===0? "disabled":""}/></button>
                 {index===0? 
                 <div>
-                    <img src={keys} height="500px" alt="arrow keys"/>
+                    <img src={keys} width="400rem" alt="arrow keys"/>
                     <h1>Control with arrow keys.</h1>
                 </div>: index===1?
                 <div>

@@ -7,7 +7,7 @@ function Lobby(props){
                 <img className="Logo" src={logo} alt="snake logo"></img>
             </div>
             <div>
-                <button className="button1" onClick={props.onClickSingle}>Single Player</button>
+                <button className="button1" onClick={props.onClickSingle}>Single<br></br>Player</button>
                 <button className="button1" onClick={props.onClickMultiple}>Multiple Player</button>
             </div>
            <div>
